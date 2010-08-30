@@ -86,7 +86,7 @@ namespace CloudAppSharpDemo
                 {
                     if (uploadedItem != null)
                     {
-                        UpdateDetailsArea(cloudApp.Upload(textBoxUploadFile.Text));
+                        UpdateDetailsArea(uploadedItem);
                     }
                 }
             }
