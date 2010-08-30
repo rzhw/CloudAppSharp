@@ -79,7 +79,7 @@ namespace CloudAppSharp
 
             // The user agent, so Linebreak can do some fun analytics if they so choose
             wcMain.Headers.Add("User-Agent", String.Format("CloudAppSharp/{0} {1}/{2} {3}",
-                "0.8",
+                "0.8.1",
                 System.Reflection.Assembly.GetExecutingAssembly().GetName().Name,
                 System.Reflection.Assembly.GetExecutingAssembly().GetName().Version,
                 ""));
@@ -152,9 +152,34 @@ namespace CloudAppSharp
             return JsonHelper.Deserialize<List<T>>(this.GetJson(uri));
         }
 
+        private int jsonRequests = 0;
         private string GetJson(Uri uri)
         {
-            return new StreamReader(this.wcMain.OpenRead(uri)).ReadToEnd();
+            // We've got a JSON request going on...
+            jsonRequests++;
+
+            // The stream
+            Stream stream;
+
+            // So if this is the only JSON request we have, then use the ordinary WebClient...
+            if (jsonRequests <= 1)
+            {
+                stream = wcMain.OpenRead(uri);
+            }
+            // Otherwise, cloning time! (Potential issue: cloning before cookies have been set)
+            else
+            {
+                CloudAppSharpWebClient wcClone = wcMain;
+                stream = wcClone.OpenRead(uri);
+            }
+
+            // Grab the response...
+            string response = new StreamReader(stream).ReadToEnd();
+
+            // And that JSON request is now done and over with!...
+            jsonRequests--;
+
+            return response;
         }
 
         private static string GetJsonStatic(Uri uri)
