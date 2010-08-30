@@ -1,0 +1,6 @@
+CloudAppSharp.old
+*/[Bb]in/
+*/[Oo]bj/
+*.user
+*.suo
+*.sln.cache
