@@ -59,6 +59,7 @@
             this.groupBoxAddBookmark = new System.Windows.Forms.GroupBox();
             this.buttonAddBookmark = new System.Windows.Forms.Button();
             this.textBoxAddBookmark = new System.Windows.Forms.TextBox();
+            this.buttonUploadsDelete = new System.Windows.Forms.Button();
             this.groupBoxCredentials.SuspendLayout();
             this.groupBoxUploads.SuspendLayout();
             this.groupBoxUploadFile.SuspendLayout();
@@ -143,6 +144,7 @@
             // 
             this.groupBoxUploads.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxUploads.Controls.Add(this.buttonUploadsDelete);
             this.groupBoxUploads.Controls.Add(this.buttonUploadsDetails);
             this.groupBoxUploads.Controls.Add(this.listViewUploads);
             this.groupBoxUploads.Controls.Add(this.buttonUploadsRefresh);
@@ -393,6 +395,17 @@
             this.textBoxAddBookmark.TabIndex = 0;
             this.textBoxAddBookmark.Text = resources.GetString("textBoxAddBookmark.Text");
             // 
+            // buttonUploadsDelete
+            // 
+            this.buttonUploadsDelete.Enabled = false;
+            this.buttonUploadsDelete.Location = new System.Drawing.Point(355, 145);
+            this.buttonUploadsDelete.Name = "buttonUploadsDelete";
+            this.buttonUploadsDelete.Size = new System.Drawing.Size(75, 23);
+            this.buttonUploadsDelete.TabIndex = 3;
+            this.buttonUploadsDelete.Text = "Delete";
+            this.buttonUploadsDelete.UseVisualStyleBackColor = true;
+            this.buttonUploadsDelete.Click += new System.EventHandler(this.buttonUploadsDelete_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -457,6 +470,7 @@
         private System.Windows.Forms.GroupBox groupBoxAddBookmark;
         private System.Windows.Forms.TextBox textBoxAddBookmark;
         private System.Windows.Forms.Button buttonAddBookmark;
+        private System.Windows.Forms.Button buttonUploadsDelete;
     }
 }
 

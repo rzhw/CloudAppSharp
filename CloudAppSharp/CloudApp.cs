@@ -115,6 +115,33 @@ namespace CloudAppSharp
         {
             return GetItemFromUri(new Uri(uri));
         }
+
+        /// <summary>
+        /// Deletes an item hosted on CloudApp uploaded by the logged in user. Requires authentication.
+        /// </summary>
+        /// <param name="uri">The uri to the item in question (e.g. http://cl.ly/gee) </param>
+        public void DeleteItemFromUri(Uri uri)
+        {
+            HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(uri);
+            wr.CookieContainer = this.cookies;
+            wr.Method = "DELETE";
+            using (HttpWebResponse response = (HttpWebResponse)wr.GetResponse())
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new WebException("CloudAppSharp: Expected status to be \"200 OK\"; got \"" + response.StatusCode + " " + response.StatusDescription + "\" instead", WebExceptionStatus.ProtocolError);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Deletes an item hosted on CloudApp uploaded by the logged in user. Requires authentication.
+        /// </summary>
+        /// <param name="uri">The uri to the item in question (e.g. http://cl.ly/gee) </param>
+        public void DeleteItemFromUri(string uri)
+        {
+            DeleteItemFromUri(new Uri(uri));
+        }
         
         /// <summary>
         /// Retrieves a list of items uploaded by the user to CloudApp. Requires authentication.

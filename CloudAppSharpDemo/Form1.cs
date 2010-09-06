@@ -116,7 +116,18 @@ namespace CloudAppSharpDemo
 
         private void listViewUploads_SelectedIndexChanged(object sender, EventArgs e)
         {
+            buttonUploadsDelete.Enabled = true;
             buttonUploadsDetails.Enabled = true;
+        }
+
+        private void buttonUploadsDelete_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to delete " + uploadsNameAssoc[listViewUploads.FocusedItem.SubItems[0].Text].Name + "?",
+                "CloudAppSharp Demo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+            {
+                cloudApp.DeleteItemFromUri(uploadsNameAssoc[listViewUploads.FocusedItem.SubItems[0].Text].Href);
+                buttonUploadsRefresh.PerformClick();
+            }
         }
 
         private void buttonUploadsDetails_Click(object sender, EventArgs e)
