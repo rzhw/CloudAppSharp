@@ -59,42 +59,58 @@ namespace CloudAppSharp
         /// <returns></returns>
         public void UploadAsync(string fileName)
         {
-            CloudAppNewItem newItem = this.GetObject<CloudAppNewItem>();
-
-            SalientUploadAsync uploader = new SalientUploadAsync(new Uri(newItem.Url), newItem.Params, fileName, "file", null, null, false);
-
             BackgroundWorker bw = new BackgroundWorker();
-            bw.WorkerReportsProgress = true;
-            bw.DoWork += new DoWorkEventHandler(uploader.bw_DoWork);
 
-            if (UploadAsyncProgressChanged != null)
-            {
-                bw.ProgressChanged += new ProgressChangedEventHandler((sender, e) =>
+            bw.DoWork += new DoWorkEventHandler((sender, e) =>
                 {
-                    UploadAsyncProgressChanged(this, new CloudAppUploadProgressChangedEventArgs(e.ProgressPercentage));
+                    e.Result = this.GetObject<CloudAppNewItem>();
                 });
-            }
 
-            if (UploadAsyncCompleted != null)
-            {
-                bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler((sender, e) =>
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler((sender, e) =>
                 {
-                    HttpWebResponse uploadResponse = (HttpWebResponse)e.Result;
+                    CloudAppNewItem newItem = (CloudAppNewItem)e.Result;
+                    SalientUploadAsync uploader = new SalientUploadAsync(new Uri(newItem.Url), newItem.Params, fileName, "file", null, null, false);
 
-                    if (uploadResponse.StatusCode == HttpStatusCode.SeeOther)
+                    BackgroundWorker bw2 = new BackgroundWorker();
+                    bw2.WorkerReportsProgress = true;
+                    bw2.DoWork += new DoWorkEventHandler(uploader.DoWork);
+
+                    if (UploadAsyncProgressChanged != null)
                     {
-                        CloudAppItem uploadedItem = this.GetObject<CloudAppItem>(new Uri(uploadResponse.Headers["Location"]));
-                        UploadAsyncCompleted(this, new CloudAppUploadCompletedEventArgs(uploadedItem));
+                        bw2.ProgressChanged += new ProgressChangedEventHandler((sender2, e2) =>
+                            {
+                                UploadAsyncProgressChanged(this, new CloudAppUploadProgressChangedEventArgs(e2.ProgressPercentage));
+                            });
                     }
-                    else
-                    {
-                        throw new WebException("CloudAppSharp: Expected status to be \"303 See Other\"; got \"" + uploadResponse.StatusCode + " " + uploadResponse.StatusDescription + "\" instead", WebExceptionStatus.ProtocolError);
-                    }
+
+                    bw2.RunWorkerCompleted += new RunWorkerCompletedEventHandler((sender2, e2) =>
+                        {
+                            HttpWebResponse uploadResponse = (HttpWebResponse)e2.Result;
+
+                            if (uploadResponse.StatusCode == HttpStatusCode.SeeOther)
+                            {
+                                if (UploadAsyncCompleted != null)
+                                {
+                                    BackgroundWorker bw3 = new BackgroundWorker();
+                                    bw3.DoWork += new DoWorkEventHandler((sender3, e3) =>
+                                        {
+                                            e3.Result = this.GetObject<CloudAppItem>(new Uri(uploadResponse.Headers["Location"]));
+                                        });
+                                    bw3.RunWorkerCompleted += new RunWorkerCompletedEventHandler((sender3, e3) =>
+                                        {
+                                            UploadAsyncCompleted(this, new CloudAppUploadCompletedEventArgs((CloudAppItem)e3.Result));
+                                        });
+                                    bw3.RunWorkerAsync();
+                                }
+                            }
+                            else
+                            {
+                                throw new WebException("CloudAppSharp: Expected status to be \"303 See Other\"; got \"" + uploadResponse.StatusCode + " " + uploadResponse.StatusDescription + "\" instead", WebExceptionStatus.ProtocolError);
+                            }
+                        });
+
+                    bw2.RunWorkerAsync();
                 });
-            }
-
-            //UploadFileCompletedEventArgs ufcea = new UploadFileCompletedEventArgs();
-            //UploadProgressChangedEventArgs upcea = new UploadProgressChangedEventArgs();
 
             bw.RunWorkerAsync();
         }

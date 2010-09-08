@@ -127,7 +127,7 @@ namespace CloudAppSharp
             webrequest.ContentLength = contentLength;
         }
 
-        public void bw_DoWork(object sender, DoWorkEventArgs e)
+        public void DoWork(object sender, DoWorkEventArgs e)
         {
             if (e.Cancel)
             {
