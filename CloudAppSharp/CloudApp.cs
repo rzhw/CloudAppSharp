@@ -32,15 +32,13 @@ namespace CloudAppSharp
     public partial class CloudApp
     {
         static CloudApp()
-    {
-        AuthenticationManager.Register(new CloudAppDigestAuth());
-    }
+        {
+            AuthenticationManager.Register(new CloudAppDigestAuth());
+        }
 
-        //private CloudAppSharpWebClient wcMain = new CloudAppSharpWebClient();
-        //private CloudAppSharpWebClient wcCloneable = new CloudAppSharpWebClient();
         private DigestCredentials credentials = null;
         private CookieContainer cookies = new CookieContainer();
-        private static Dictionary<Type, string> jsonUris = new Dictionary<Type,string>();
+        private static Dictionary<Type, string> jsonUris = new Dictionary<Type, string>();
 
         /// <summary>
         /// Provides common methods for sending data to and receiving data from a resource identified by a URI,
@@ -71,12 +69,12 @@ namespace CloudAppSharp
         /// </summary>
         /// <param name="email">The email associated with the credentials.</param>
         /// <param name="password">The password associated with the credentials.</param>
-        public CloudApp(string email, string password) : this(email,password,false)
+        public CloudApp(string email, string password) : this(email, password, false)
         {
         }
 
         /// <summary>
-        /// Initialises a new instance of the CloudAppSharp.CloudApp class with the specified email and password / HA1 hash.
+        /// Initialises a new instance of the CloudAppSharp.CloudApp class with the specified email and password or HA1 hash.
         /// </summary>
         /// <param name="email">The email associated with the credentials.</param>
         /// <param name="password">The password or precalculated HA1 associated with the credentials.</param>
@@ -106,13 +104,14 @@ namespace CloudAppSharp
             // Say, are these credentials valid?
             wc.OpenRead("http://my.cl.ly/items/new");
             credentials = (DigestCredentials)wc.Credentials;
+
             // We now have some cookies! Yum.
             cookies = wc.m_container;
         }
 
         public DigestCredentials GetCredentials()
         {
-            return new DigestCredentials(credentials.Username,credentials.Ha1,true);
+            return new DigestCredentials(credentials.Username, credentials.Ha1, true);
         }
 
         /// <summary>
