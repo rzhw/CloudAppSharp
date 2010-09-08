@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CloudAppUpload.cs" />
+    <Compile Include="DigestAuth.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="CloudAppJson.cs" />
     <Compile Include="CloudApp.cs" />

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using CloudAppSharp;
 using System.IO;
 using System.Net;
+using System.Windows.Forms;
+using CloudAppSharp;
+using CloudAppSharp.Auth;
 
 namespace CloudAppSharpDemo
 {
@@ -38,6 +35,10 @@ namespace CloudAppSharpDemo
                 groupBoxUploadFile.Enabled = true;
                 groupBoxUploads.Enabled = true;
                 buttonLogin.Text = "Logout";
+                DigestCredentials digestCredentials = cloudApp.GetCredentials();
+                // Just an example of how to get HA1.
+                MessageBox.Show(string.Format("Now logged in as {0} with login hash of {1}.", digestCredentials.Username,
+                                              digestCredentials.Ha1));
             }
             else
             {

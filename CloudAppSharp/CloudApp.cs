@@ -20,11 +20,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net;
 using System.IO;
-using System.Collections.Specialized;
+using System.Net;
+using CloudAppSharp.Auth;
 
 namespace CloudAppSharp
 {
@@ -33,9 +31,14 @@ namespace CloudAppSharp
     /// </summary>
     public partial class CloudApp
     {
+        static CloudApp()
+    {
+        AuthenticationManager.Register(new CloudAppDigestAuth());
+    }
+
         //private CloudAppSharpWebClient wcMain = new CloudAppSharpWebClient();
         //private CloudAppSharpWebClient wcCloneable = new CloudAppSharpWebClient();
-        private CredentialCache credentials = new CredentialCache();
+        private DigestCredentials credentials = null;
         private CookieContainer cookies = new CookieContainer();
         private static Dictionary<Type, string> jsonUris = new Dictionary<Type,string>();
 
@@ -68,8 +71,19 @@ namespace CloudAppSharp
         /// </summary>
         /// <param name="email">The email associated with the credentials.</param>
         /// <param name="password">The password associated with the credentials.</param>
-        public CloudApp(string email, string password)
+        public CloudApp(string email, string password) : this(email,password,false)
         {
+        }
+
+        /// <summary>
+        /// Initialises a new instance of the CloudAppSharp.CloudApp class with the specified email and password / HA1 hash.
+        /// </summary>
+        /// <param name="email">The email associated with the credentials.</param>
+        /// <param name="password">The password or precalculated HA1 associated with the credentials.</param>
+        /// <param name="isHA1">This specifies if the password field is a password, or a hash. True if a hash, false if a password.</param>
+        public CloudApp(string email, string password, bool isHA1)
+        {
+            email = email.ToLower(); // Cloudapp ALWAYS lowercases the email before it hashes it.
             // JSON URIs
             jsonUris.Clear();
             jsonUris.Add(typeof(CloudAppItem), "http://my.cl.ly/items");
@@ -79,8 +93,8 @@ namespace CloudAppSharp
             CloudAppSharpWebClient wc = new CloudAppSharpWebClient();
 
             // Authentication
-            credentials.Add(new Uri("http://my.cl.ly/"), "Digest", new NetworkCredential(email, password));
-            wc.Credentials = credentials;
+
+            wc.Credentials = new DigestCredentials(email, password, isHA1);
 
             //// The user agent, so Linebreak can do some fun analytics if they so choose
             //wcMain.Headers.Add("User-Agent", String.Format("CloudAppSharp/{0} {1}/{2} {3}",
@@ -91,9 +105,14 @@ namespace CloudAppSharp
 
             // Say, are these credentials valid?
             wc.OpenRead("http://my.cl.ly/items/new");
-
+            credentials = (DigestCredentials)wc.Credentials;
             // We now have some cookies! Yum.
             cookies = wc.m_container;
+        }
+
+        public DigestCredentials GetCredentials()
+        {
+            return new DigestCredentials(credentials.Username,credentials.Ha1,true);
         }
 
         /// <summary>
