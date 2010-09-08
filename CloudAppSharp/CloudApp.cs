@@ -81,7 +81,9 @@ namespace CloudAppSharp
         /// <param name="isHA1">This specifies if the password field is a password, or a hash. True if a hash, false if a password.</param>
         public CloudApp(string email, string password, bool isHA1)
         {
-            email = email.ToLower(); // Cloudapp ALWAYS lowercases the email before it hashes it.
+            // CloudApp seems to store emails in its database lowercased.
+            email = email.ToLower();
+
             // JSON URIs
             jsonUris.Clear();
             jsonUris.Add(typeof(CloudAppItem), "http://my.cl.ly/items");

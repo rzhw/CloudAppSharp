@@ -1,5 +1,5 @@
-CloudAppSharp 0.9
-=================
+CloudAppSharp 0.9.2
+===================
 
 http://github.com/a2h/CloudAppSharp
 
@@ -16,7 +16,17 @@ Instructions
 Changelog
 ---------
 
-0.8.1 to 0.9:
+0.9.1 to 0.9.2:
+
+* Lowercase emails before making a request; apparently CloudApp stores
+  emails lowercased in their database...
+* Added support for logging into CloudApp via HA1 (thanks ShaRose!)
+
+0.9.0 to 0.9.1:
+
+* Made CloudApp.UploadAsync() actually fully async
+
+0.8.1 to 0.9.0:
 
 * Added support for deleting files
 
