@@ -56,6 +56,7 @@ namespace CloudAppSharpDemo
         private void buttonAddBookmark_Click(object sender, EventArgs e)
         {
             CloudAppItem bookmark = cloudApp.AddBookmark(new Uri(textBoxAddBookmark.Text));
+            UpdateDetailsArea(bookmark);
         }
 
         private void buttonUploadFileBrowse_Click(object sender, EventArgs e)

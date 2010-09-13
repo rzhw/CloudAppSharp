@@ -154,6 +154,30 @@ namespace CloudAppSharp
     }
 
     [DataContract]
+    public class CloudAppNewBookmark
+    {
+        public CloudAppNewBookmark() { }
+
+        public CloudAppNewBookmark(string name, string redirectUrl)
+        {
+            Item = new CloudAppNewBookmarkDetails { Name = name, RedirectUrl = redirectUrl };
+        }
+
+        [DataMember(Name = "item")]
+        public CloudAppNewBookmarkDetails Item { get; set; }
+        
+        [DataContract]
+        public class CloudAppNewBookmarkDetails
+        {
+            [DataMember(Name = "name")]
+            public string Name { get; set; }
+
+            [DataMember(Name = "redirect_url")]
+            public string RedirectUrl { get; set; }
+        }
+    }
+
+    [DataContract]
     internal class CloudAppNewItemParams
     {
         [DataMember]

@@ -58,6 +58,7 @@ namespace CloudAppSharp
                     (request as HttpWebRequest).CookieContainer = m_container;
 
                     // We can understand JSON! Really!
+                    (request as HttpWebRequest).ContentType = "application/json";
                     (request as HttpWebRequest).Accept = "application/json";
                 }
                 return request;
@@ -184,7 +185,13 @@ namespace CloudAppSharp
 
         public CloudAppItem AddBookmark(Uri uri)
         {
-            return null;
+            CloudAppSharpWebClient wc = new CloudAppSharpWebClient();
+            wc.m_container = this.cookies;
+
+            string toSend = JsonHelper.Serialize<CloudAppNewBookmark>(new CloudAppNewBookmark(uri.ToString(), uri.ToString()));
+
+            string response = wc.UploadString("http://my.cl.ly/items", "POST", toSend);
+            return JsonHelper.Deserialize<CloudAppItem>(response);
         }
 
         public CloudAppItem AddBookmark(string uri)
@@ -211,8 +218,7 @@ namespace CloudAppSharp
         {
             CloudAppSharpWebClient wc = new CloudAppSharpWebClient();
             wc.m_container = this.cookies;
-            Stream stream = wc.OpenRead(uri);
-            return new StreamReader(stream).ReadToEnd();
+            return new StreamReader(wc.OpenRead(uri)).ReadToEnd();
         }
 
         private static string GetJsonStatic(Uri uri)

@@ -36,6 +36,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBoxUploads = new System.Windows.Forms.GroupBox();
+            this.buttonUploadsDelete = new System.Windows.Forms.Button();
             this.buttonUploadsDetails = new System.Windows.Forms.Button();
             this.listViewUploads = new System.Windows.Forms.ListView();
             this.columnHeaderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -59,7 +60,6 @@
             this.groupBoxAddBookmark = new System.Windows.Forms.GroupBox();
             this.buttonAddBookmark = new System.Windows.Forms.Button();
             this.textBoxAddBookmark = new System.Windows.Forms.TextBox();
-            this.buttonUploadsDelete = new System.Windows.Forms.Button();
             this.groupBoxCredentials.SuspendLayout();
             this.groupBoxUploads.SuspendLayout();
             this.groupBoxUploadFile.SuspendLayout();
@@ -155,6 +155,17 @@
             this.groupBoxUploads.TabIndex = 1;
             this.groupBoxUploads.TabStop = false;
             this.groupBoxUploads.Text = "Uploads";
+            // 
+            // buttonUploadsDelete
+            // 
+            this.buttonUploadsDelete.Enabled = false;
+            this.buttonUploadsDelete.Location = new System.Drawing.Point(355, 145);
+            this.buttonUploadsDelete.Name = "buttonUploadsDelete";
+            this.buttonUploadsDelete.Size = new System.Drawing.Size(75, 23);
+            this.buttonUploadsDelete.TabIndex = 3;
+            this.buttonUploadsDelete.Text = "Delete";
+            this.buttonUploadsDelete.UseVisualStyleBackColor = true;
+            this.buttonUploadsDelete.Click += new System.EventHandler(this.buttonUploadsDelete_Click);
             // 
             // buttonUploadsDetails
             // 
@@ -383,7 +394,7 @@
             this.buttonAddBookmark.Name = "buttonAddBookmark";
             this.buttonAddBookmark.Size = new System.Drawing.Size(75, 23);
             this.buttonAddBookmark.TabIndex = 1;
-            this.buttonAddBookmark.Text = "Shortern";
+            this.buttonAddBookmark.Text = "Add";
             this.buttonAddBookmark.UseVisualStyleBackColor = true;
             this.buttonAddBookmark.Click += new System.EventHandler(this.buttonAddBookmark_Click);
             // 
@@ -393,18 +404,7 @@
             this.textBoxAddBookmark.Name = "textBoxAddBookmark";
             this.textBoxAddBookmark.Size = new System.Drawing.Size(281, 20);
             this.textBoxAddBookmark.TabIndex = 0;
-            this.textBoxAddBookmark.Text = resources.GetString("textBoxAddBookmark.Text");
-            // 
-            // buttonUploadsDelete
-            // 
-            this.buttonUploadsDelete.Enabled = false;
-            this.buttonUploadsDelete.Location = new System.Drawing.Point(355, 145);
-            this.buttonUploadsDelete.Name = "buttonUploadsDelete";
-            this.buttonUploadsDelete.Size = new System.Drawing.Size(75, 23);
-            this.buttonUploadsDelete.TabIndex = 3;
-            this.buttonUploadsDelete.Text = "Delete";
-            this.buttonUploadsDelete.UseVisualStyleBackColor = true;
-            this.buttonUploadsDelete.Click += new System.EventHandler(this.buttonUploadsDelete_Click);
+            this.textBoxAddBookmark.Text = "http://www.google.com/";
             // 
             // Form1
             // 
