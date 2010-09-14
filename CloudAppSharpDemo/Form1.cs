@@ -76,21 +76,8 @@ namespace CloudAppSharpDemo
 
             if (File.Exists(filePath))
             {
-                try
-                {
-                    uploadedItem = cloudApp.Upload(textBoxUploadFile.Text);
-                }
-                catch (WebException ex)
-                {
-                    MessageBox.Show("The file couldn't be uploaded!\n\n" + ex.Message, "CloudAppSharp Demo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    if (uploadedItem != null)
-                    {
-                        UpdateDetailsArea(uploadedItem);
-                    }
-                }
+                uploadedItem = cloudApp.Upload(textBoxUploadFile.Text);
+                UpdateDetailsArea(uploadedItem);
             }
             else
             {
