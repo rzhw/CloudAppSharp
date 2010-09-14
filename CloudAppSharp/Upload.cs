@@ -63,6 +63,9 @@ namespace CloudAppSharp
 
             fileFieldName = string.IsNullOrEmpty(fileFieldName) ? "file" : fileFieldName;
 
+            // Timeouts
+            webrequest.Timeout = System.Threading.Timeout.Infinite;
+
             if (headers != null)
             {
                 // set the headers

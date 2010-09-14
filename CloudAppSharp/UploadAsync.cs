@@ -22,17 +22,11 @@ namespace CloudAppSharp
 {
     internal class SalientUploadAsync
     {
-        //byte[] buffer;
         byte[] header;
         byte[] footer;
         string _fileName;
 
         public int chunkSize = 128;
-        public int Progress = 0;
-
-        //public event EventHandler ProgressChanged;
-        //public event EventHandler Uploaded;
-        //public HttpWebResponse Response;
 
         HttpWebRequest webrequest;
         public SalientUploadAsync(Uri requestUri, NameValueCollection postData, string fileName, string fileFieldName, CookieContainer cookies,
@@ -43,6 +37,9 @@ namespace CloudAppSharp
 
             // The web request
             webrequest = (HttpWebRequest)WebRequest.Create(requestUri);
+
+            // Timeouts
+            webrequest.Timeout = System.Threading.Timeout.Infinite;
 
             // Do we want to allow automatic redirection?
             if (!allowAutoRedirect)
