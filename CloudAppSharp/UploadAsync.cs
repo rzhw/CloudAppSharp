@@ -6,6 +6,7 @@
  *
  * Modified by a2h to allow disabling of automatic redirection (31/07/2010)
  * Modified by a2h to support asynchronous uploading (13/08/2010)
+ * Modified by a2h to remove MIME detection (14/09/2010)
  */
 
 using System;
@@ -53,10 +54,6 @@ namespace CloudAppSharp
             FileStream fileData = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
 
             // Blah
-            string ctype;
-
-            string fileContentType = TryGetContentType(fileName, out ctype) ? ctype : "application/octet-stream";
-
             fileFieldName = string.IsNullOrEmpty(fileFieldName) ? "file" : fileFieldName;
 
             if (headers != null)
@@ -113,7 +110,7 @@ namespace CloudAppSharp
                         "filename=\"{0}\";",
                                                           Path.GetFileName(fileName)));
 
-                sbHeader.AppendFormat("Content-Type: {0}\r\n\r\n", fileContentType);
+                sbHeader.AppendFormat("Content-Type: {0}\r\n\r\n", "application/octet-stream");
             }
 
             header = Encoding.UTF8.GetBytes(sbHeader.ToString());
@@ -159,49 +156,6 @@ namespace CloudAppSharp
                 // The result
                 e.Result = (HttpWebResponse)webrequest.GetResponse();
             }
-        }
-
-        internal static bool TryGetContentType(string fileName, out string contentType)
-        {
-            try
-            {
-                RegistryKey key = Registry.ClassesRoot.OpenSubKey
-                    (@"MIME\Database\Content Type");
-
-                if (key != null)
-                {
-                    foreach (string keyName in key.GetSubKeyNames())
-                    {
-                        RegistryKey subKey = key.OpenSubKey(keyName);
-                        if (subKey != null)
-                        {
-                            string subKeyValue = (string)subKey.GetValue("Extension");
-
-                            if (!string.IsNullOrEmpty(subKeyValue))
-                            {
-                                if (string.Compare(Path.GetExtension
-                    (fileName).ToUpperInvariant(),
-                                         subKeyValue.ToUpperInvariant(),
-                    StringComparison.OrdinalIgnoreCase) ==
-                                    0)
-                                {
-                                    contentType = keyName;
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            // ReSharper disable EmptyGeneralCatchClause
-            catch
-            {
-                // fail silently
-                // TODO: rethrow registry access denied errors
-            }
-            // ReSharper restore EmptyGeneralCatchClause
-            contentType = "";
-            return false;
         }
     }
 }

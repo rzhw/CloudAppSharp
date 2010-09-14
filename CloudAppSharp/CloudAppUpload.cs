@@ -34,7 +34,7 @@ namespace CloudAppSharp
         public CloudAppItem Upload(string fileName)
         {
             CloudAppNewItem newItem = this.GetObject<CloudAppNewItem>();
-            HttpWebResponse uploadResponse = (HttpWebResponse)SalientUpload.PostFile(new Uri(newItem.Url), newItem.Params, fileName, null, "file", null, null, false);
+            HttpWebResponse uploadResponse = (HttpWebResponse)SalientUpload.PostFile(new Uri(newItem.Url), newItem.Params, fileName, "file", null, null, false);
 
             if (uploadResponse.StatusCode == HttpStatusCode.SeeOther)
             {

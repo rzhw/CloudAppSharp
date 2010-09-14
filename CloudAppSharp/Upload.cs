@@ -5,6 +5,7 @@
  * The Code Project Open License (CPOL)
  *
  * Modified by a2h to allow disabling of automatic redirection (31/07/2010)
+ * Modified by a2h to remove MIME detection (14/09/2010)
  */
 
 using System;
@@ -50,7 +51,7 @@ namespace CloudAppSharp
         /// 
         public static WebResponse PostFile
         (Uri requestUri, NameValueCollection postData, Stream fileData, string fileName,
-                string fileContentType, string fileFieldName, CookieContainer cookies,
+                string fileFieldName, CookieContainer cookies,
                 NameValueCollection headers, bool allowAutoRedirect)
         {
             HttpWebRequest webrequest = (HttpWebRequest)WebRequest.Create(requestUri);
@@ -59,13 +60,6 @@ namespace CloudAppSharp
             {
                 webrequest.AllowAutoRedirect = false;
             }
-
-            string ctype;
-
-            fileContentType = string.IsNullOrEmpty(fileContentType)
-                                  ? TryGetContentType(fileName, out ctype) ?
-                    ctype : "application/octet-stream"
-                                  : fileContentType;
 
             fileFieldName = string.IsNullOrEmpty(fileFieldName) ? "file" : fileFieldName;
 
@@ -123,7 +117,7 @@ namespace CloudAppSharp
                         "filename=\"{0}\";",
                                                           Path.GetFileName(fileName)));
 
-                sbHeader.AppendFormat("Content-Type: {0}\r\n\r\n", fileContentType);
+                sbHeader.AppendFormat("Content-Type: {0}\r\n\r\n", "application/octet-stream");
             }
 
             byte[] header = Encoding.UTF8.GetBytes(sbHeader.ToString());
@@ -177,64 +171,16 @@ namespace CloudAppSharp
         /// <returns></returns>
         public static WebResponse PostFile
         (Uri requestUri, NameValueCollection postData, string fileName,
-             string fileContentType, string fileFieldName, CookieContainer cookies,
+             string fileFieldName, CookieContainer cookies,
              NameValueCollection headers, bool allowAutoRedirect)
         {
             using (FileStream fileData = File.Open
             (fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 return PostFile(requestUri, postData, fileData,
-            fileName, fileContentType, fileFieldName, cookies,
+            fileName, fileFieldName, cookies,
                                 headers, allowAutoRedirect);
             }
-        }
-        /// <summary>
-        /// Attempts to query registry for content-type of supplied file name.
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="contentType"></param>
-        /// <returns></returns>
-        public static bool TryGetContentType(string fileName, out string contentType)
-        {
-            try
-            {
-                RegistryKey key = Registry.ClassesRoot.OpenSubKey
-                    (@"MIME\Database\Content Type");
-
-                if (key != null)
-                {
-                    foreach (string keyName in key.GetSubKeyNames())
-                    {
-                        RegistryKey subKey = key.OpenSubKey(keyName);
-                        if (subKey != null)
-                        {
-                            string subKeyValue = (string)subKey.GetValue("Extension");
-
-                            if (!string.IsNullOrEmpty(subKeyValue))
-                            {
-                                if (string.Compare(Path.GetExtension
-                    (fileName).ToUpperInvariant(),
-                                         subKeyValue.ToUpperInvariant(),
-                    StringComparison.OrdinalIgnoreCase) ==
-                                    0)
-                                {
-                                    contentType = keyName;
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            // ReSharper disable EmptyGeneralCatchClause
-            catch
-            {
-                // fail silently
-                // TODO: rethrow registry access denied errors
-            }
-            // ReSharper restore EmptyGeneralCatchClause
-            contentType = "";
-            return false;
         }
     }
 }
