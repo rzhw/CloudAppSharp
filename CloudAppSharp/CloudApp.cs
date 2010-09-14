@@ -1,4 +1,4 @@
-﻿/*!
+﻿/**
  * CloudAppSharp
  * Copyright (c) 2010 a2h <http://a2h.uni.cc/>
  *

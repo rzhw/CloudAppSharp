@@ -1,14 +1,11 @@
-﻿// /*!
-//  * Project: Salient.Web.HttpLib
-//  * http://salient.codeplex.com
-//  *
-//  * This extract of the library has been licensed by the author under The Code Project Open License (CPOL)
-//  * http://www.codeproject.com/Articles/72232/Csharp-File-Upload-with-form-fields-cookies-and-he.aspx
-//  *
-//  * Modified by a2h to allow disabling of automatic redirection
-//  *
-//  * Date: July 31 2010 
-//  */
+﻿/**
+ * Salient Upload
+ * <http://www.codeproject.com/Articles/72232/..aspx>
+ * The original class was been licensed by its author under
+ * The Code Project Open License (CPOL)
+ *
+ * Modified by a2h to allow disabling of automatic redirection (31/07/2010)
+ */
 
 using System;
 using System.Collections.Specialized;
