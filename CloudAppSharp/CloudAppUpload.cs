@@ -82,6 +82,8 @@ namespace CloudAppSharp
 
                     bw2.RunWorkerCompleted += new RunWorkerCompletedEventHandler((sender2, e2) =>
                         {
+                            uploader.Dispose();
+
                             HttpWebResponse uploadResponse = (HttpWebResponse)e2.Result;
 
                             if (uploadResponse.StatusCode == HttpStatusCode.SeeOther)

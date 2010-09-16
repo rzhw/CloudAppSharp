@@ -20,18 +20,50 @@ using System.ComponentModel;
 
 namespace CloudAppSharp
 {
-    internal class SalientUploadAsync
+    internal class SalientUploadAsync : IDisposable
     {
         byte[] header;
         byte[] footer;
         string _fileName;
-
         public int chunkSize = 128;
-
         HttpWebRequest webrequest;
+        FileStream fileData;
+
+        #region Disposal
+        private bool disposed = false;
+
+        ~SalientUploadAsync()
+        {
+            // Managed resources will be disposed of with deconstruction anyway
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            // Tell the garbage collector the finalise process no longer needs to be run for this object
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposeManagedResources)
+        {
+            if (!disposed)
+            {
+                if (disposeManagedResources)
+                {
+                    fileData.Dispose();
+                }
+                disposed = true;
+            }
+        }
+        #endregion
+
         public SalientUploadAsync(Uri requestUri, NameValueCollection postData, string fileName, string fileFieldName, CookieContainer cookies,
              NameValueCollection headers, bool allowAutoRedirect)
         {
+            // Open the file
+            fileData = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+
             // The filename
             _fileName = fileName;
 
@@ -46,9 +78,6 @@ namespace CloudAppSharp
             {
                 webrequest.AllowAutoRedirect = false;
             }
-
-            // Read the file into a stream for use
-            FileStream fileData = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
 
             // Blah
             fileFieldName = string.IsNullOrEmpty(fileFieldName) ? "file" : fileFieldName;
@@ -91,7 +120,7 @@ namespace CloudAppSharp
                         {
                             sbHeader.AppendFormat("--{0}\r\n", boundary);
                             sbHeader.AppendFormat("Content-Disposition: form-data; name=\"{0}\";\r\n\r\n{1}\r\n", key,
-                                                  value);
+                                                    value);
                         }
                 }
             }
@@ -100,12 +129,12 @@ namespace CloudAppSharp
             {
                 sbHeader.AppendFormat("--{0}\r\n", boundary);
                 sbHeader.AppendFormat("Content-Disposition: form-data; name=\"{0}\"; {1}\r\n", fileFieldName,
-                                      string.IsNullOrEmpty(fileName)
-                                          ?
-                                              ""
-                                          : string.Format(CultureInfo.InvariantCulture,
+                                        string.IsNullOrEmpty(fileName)
+                                            ?
+                                                ""
+                                            : string.Format(CultureInfo.InvariantCulture,
                         "filename=\"{0}\";",
-                                                          Path.GetFileName(fileName)));
+                                                            Path.GetFileName(fileName)));
 
                 sbHeader.AppendFormat("Content-Type: {0}\r\n\r\n", "application/octet-stream");
             }
@@ -128,7 +157,6 @@ namespace CloudAppSharp
             {
                 BackgroundWorker worker = (BackgroundWorker)sender;
 
-                FileStream fileData = File.Open(_fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
                 Stream requestStream = webrequest.GetRequestStream();
 
                 requestStream.Write(header, 0, header.Length);
