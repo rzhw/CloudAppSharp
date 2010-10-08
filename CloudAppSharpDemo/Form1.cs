@@ -13,7 +13,6 @@ namespace CloudAppSharpDemo
     {
         private bool cloudAppLogged = false;
         private CloudApp cloudApp;
-        private Dictionary<string, CloudAppItem> uploadsNameAssoc = new Dictionary<string,CloudAppItem>();
 
         public Form1()
         {
@@ -88,14 +87,13 @@ namespace CloudAppSharpDemo
         private void buttonUploadsRefresh_Click(object sender, EventArgs e)
         {
             listViewUploads.Items.Clear();
-            uploadsNameAssoc.Clear();
 
             List<CloudAppItem> items = cloudApp.GetItems();
 
             foreach (CloudAppItem item in items)
             {
                 ListViewItem itemListViewItem = listViewUploads.Items.Add(item.Name);
-                uploadsNameAssoc.Add(item.Name, item);
+                itemListViewItem.Tag = item;
                 itemListViewItem.SubItems.Add(""); // icon
                 itemListViewItem.SubItems.Add(item.ViewCounter.ToString());
                 itemListViewItem.SubItems.Add(item.CreatedAt);
@@ -105,23 +103,36 @@ namespace CloudAppSharpDemo
 
         private void listViewUploads_SelectedIndexChanged(object sender, EventArgs e)
         {
+            buttonUploadsPrivacy.Enabled = true;
             buttonUploadsDelete.Enabled = true;
             buttonUploadsDetails.Enabled = true;
         }
 
-        private void buttonUploadsDelete_Click(object sender, EventArgs e)
+        private void buttonUploadsPrivacy_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to delete " + uploadsNameAssoc[listViewUploads.FocusedItem.SubItems[0].Text].Name + "?",
+            CloudAppItem item = (CloudAppItem)listViewUploads.FocusedItem.Tag;
+            if (MessageBox.Show("This item is " + (item.Private ? "private" : "public") + ". Do you want to make it " + (item.Private ? "public" : "private") + "?",
                 "CloudAppSharp Demo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
             {
-                cloudApp.DeleteItemFromUri(uploadsNameAssoc[listViewUploads.FocusedItem.SubItems[0].Text].Href);
+                cloudApp.SetPrivacy(item, !item.Private);
+            }
+        }
+
+        private void buttonUploadsDelete_Click(object sender, EventArgs e)
+        {
+            CloudAppItem item = (CloudAppItem)listViewUploads.FocusedItem.Tag;
+            if (MessageBox.Show("Are you sure you want to delete " + item.Name + "?",
+                "CloudAppSharp Demo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+            {
+                cloudApp.DeleteItemFromUri(item.Href);
                 buttonUploadsRefresh.PerformClick();
             }
         }
 
         private void buttonUploadsDetails_Click(object sender, EventArgs e)
         {
-            UpdateDetailsArea(uploadsNameAssoc[listViewUploads.FocusedItem.SubItems[0].Text]);
+            CloudAppItem item = (CloudAppItem)listViewUploads.FocusedItem.Tag;
+            UpdateDetailsArea(item);
         }
 
         private void buttonDetailsFromUrl_Click(object sender, EventArgs e)

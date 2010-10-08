@@ -36,6 +36,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBoxUploads = new System.Windows.Forms.GroupBox();
+            this.buttonUploadsPrivacy = new System.Windows.Forms.Button();
             this.buttonUploadsDelete = new System.Windows.Forms.Button();
             this.buttonUploadsDetails = new System.Windows.Forms.Button();
             this.listViewUploads = new System.Windows.Forms.ListView();
@@ -144,6 +145,7 @@
             // 
             this.groupBoxUploads.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxUploads.Controls.Add(this.buttonUploadsPrivacy);
             this.groupBoxUploads.Controls.Add(this.buttonUploadsDelete);
             this.groupBoxUploads.Controls.Add(this.buttonUploadsDetails);
             this.groupBoxUploads.Controls.Add(this.listViewUploads);
@@ -156,10 +158,21 @@
             this.groupBoxUploads.TabStop = false;
             this.groupBoxUploads.Text = "Uploads";
             // 
+            // buttonUploadsPrivacy
+            // 
+            this.buttonUploadsPrivacy.Enabled = false;
+            this.buttonUploadsPrivacy.Location = new System.Drawing.Point(355, 145);
+            this.buttonUploadsPrivacy.Name = "buttonUploadsPrivacy";
+            this.buttonUploadsPrivacy.Size = new System.Drawing.Size(75, 23);
+            this.buttonUploadsPrivacy.TabIndex = 4;
+            this.buttonUploadsPrivacy.Text = "Privacy...";
+            this.buttonUploadsPrivacy.UseVisualStyleBackColor = true;
+            this.buttonUploadsPrivacy.Click += new System.EventHandler(this.buttonUploadsPrivacy_Click);
+            // 
             // buttonUploadsDelete
             // 
             this.buttonUploadsDelete.Enabled = false;
-            this.buttonUploadsDelete.Location = new System.Drawing.Point(355, 145);
+            this.buttonUploadsDelete.Location = new System.Drawing.Point(275, 145);
             this.buttonUploadsDelete.Name = "buttonUploadsDelete";
             this.buttonUploadsDelete.Size = new System.Drawing.Size(75, 23);
             this.buttonUploadsDelete.TabIndex = 3;
@@ -471,6 +484,7 @@
         private System.Windows.Forms.TextBox textBoxAddBookmark;
         private System.Windows.Forms.Button buttonAddBookmark;
         private System.Windows.Forms.Button buttonUploadsDelete;
+        private System.Windows.Forms.Button buttonUploadsPrivacy;
     }
 }
 
