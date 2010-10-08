@@ -1,4 +1,4 @@
-CloudAppSharp 0.9.2
+CloudAppSharp 1.0.2
 ===================
 
 http://github.com/a2h/CloudAppSharp
@@ -15,6 +15,20 @@ Instructions
 
 Changelog
 ---------
+
+1.0.1 to 1.0.2:
+
+* Allow disposal of the asynchronous uploader
+
+1.0.0 to 1.0.1:
+
+* Don't catch errors when uploading
+* Don't bother with detecting the content type of files when uploading
+* Fixed uploads timing out at the .NET default of 100 seconds
+
+0.9.2 to 1.0.0:
+
+* Added support for creating new bookmarks
 
 0.9.1 to 0.9.2:
 
