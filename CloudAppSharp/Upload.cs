@@ -6,6 +6,7 @@
  *
  * Modified by a2h to allow disabling of automatic redirection (31/07/2010)
  * Modified by a2h to remove MIME detection (14/09/2010)
+ * Modified by a2h to add proxy support (23/10/2010)
  */
 
 using System;
@@ -55,6 +56,9 @@ namespace CloudAppSharp
                 NameValueCollection headers, bool allowAutoRedirect)
         {
             HttpWebRequest webrequest = (HttpWebRequest)WebRequest.Create(requestUri);
+
+            // Proxy
+            webrequest.Proxy = CloudApp.Proxy;
 
             if (!allowAutoRedirect)
             {

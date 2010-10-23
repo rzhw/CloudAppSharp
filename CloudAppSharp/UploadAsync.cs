@@ -7,6 +7,7 @@
  * Modified by a2h to allow disabling of automatic redirection (31/07/2010)
  * Modified by a2h to support asynchronous uploading (13/08/2010)
  * Modified by a2h to remove MIME detection (14/09/2010)
+ * Modified by a2h to add proxy support (23/10/2010)
  */
 
 using System;
@@ -69,6 +70,9 @@ namespace CloudAppSharp
 
             // The web request
             webrequest = (HttpWebRequest)WebRequest.Create(requestUri);
+
+            // Proxy
+            webrequest.Proxy = CloudApp.Proxy;
 
             // Timeouts
             webrequest.Timeout = System.Threading.Timeout.Infinite;

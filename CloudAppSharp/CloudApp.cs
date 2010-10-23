@@ -31,38 +31,15 @@ namespace CloudAppSharp
     /// </summary>
     public partial class CloudApp
     {
-        static CloudApp()
-        {
-            AuthenticationManager.Register(new CloudAppDigestAuth());
-        }
-
         private DigestCredentials credentials = null;
         private CookieContainer cookies = new CookieContainer();
         private static Dictionary<Type, string> jsonUris = new Dictionary<Type, string>();
+        public static IWebProxy Proxy { get; set; }
 
-        /// <summary>
-        /// Provides common methods for sending data to and receiving data from a resource identified by a URI,
-        /// and in addition, retains cookies and accepts JSON data where possible.
-        /// <para>Original class (CookieAwareWebClient) written by Yuriy Solodkyy.</para>
-        /// </summary>
-        internal class CloudAppSharpWebClient : WebClient
+        static CloudApp()
         {
-            public CookieContainer m_container = new CookieContainer();
-
-            protected override WebRequest GetWebRequest(Uri address)
-            {
-                WebRequest request = base.GetWebRequest(address);
-                if (request is HttpWebRequest)
-                {
-                    // We'll need to take in cookies to allow for the third step of the upload process to complete
-                    (request as HttpWebRequest).CookieContainer = m_container;
-
-                    // We can understand JSON! Really!
-                    (request as HttpWebRequest).ContentType = "application/json";
-                    (request as HttpWebRequest).Accept = "application/json";
-                }
-                return request;
-            }
+            AuthenticationManager.Register(new CloudAppDigestAuth());
+            Proxy = WebRequest.GetSystemWebProxy();
         }
 
         /// <summary>
@@ -144,6 +121,7 @@ namespace CloudAppSharp
         public void DeleteItemFromUri(Uri uri)
         {
             HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(uri);
+            wr.Proxy = Proxy;
             wr.CookieContainer = this.cookies;
             wr.Method = "DELETE";
             using (HttpWebResponse response = (HttpWebResponse)wr.GetResponse())
@@ -224,6 +202,7 @@ namespace CloudAppSharp
         private static string GetJsonStatic(Uri uri)
         {
             WebClient wc = new WebClient();
+            wc.Proxy = Proxy;
             wc.Headers.Add("Accept", "application/json");
             return new StreamReader(wc.OpenRead(uri)).ReadToEnd();
         }
@@ -237,6 +216,34 @@ namespace CloudAppSharp
             else
             {
                 throw new ArgumentException("The type passed to a method in the CloudAppSharp namespace doesn't have an assigned URI. If the type exists, then you will need to manually pass a URI.");
+            }
+        }
+
+        /// <summary>
+        /// Provides common methods for sending data to and receiving data from a resource identified by a URI,
+        /// and in addition, retains cookies and accepts JSON data where possible.
+        /// <para>Original class (CookieAwareWebClient) written by Yuriy Solodkyy.</para>
+        /// </summary>
+        internal class CloudAppSharpWebClient : WebClient
+        {
+            public CookieContainer m_container = new CookieContainer();
+
+            protected override WebRequest GetWebRequest(Uri address)
+            {
+                WebRequest request = base.GetWebRequest(address);
+                if (request is HttpWebRequest)
+                {
+                    // We'll need to take in cookies to allow for the third step of the upload process to complete
+                    (request as HttpWebRequest).CookieContainer = m_container;
+
+                    // We can understand JSON! Really!
+                    (request as HttpWebRequest).ContentType = "application/json";
+                    (request as HttpWebRequest).Accept = "application/json";
+
+                    // The proxy!
+                    (request as HttpWebRequest).Proxy = CloudApp.Proxy;
+                }
+                return request;
             }
         }
     }
