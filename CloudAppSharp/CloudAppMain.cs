@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Text;
 using CloudAppSharp.Auth;
 
 namespace CloudAppSharp
@@ -113,8 +114,7 @@ namespace CloudAppSharp
         /// <param name="item">The item to delete</param>
         public void DeleteItem(CloudAppItem item)
         {
-            HttpWebRequest wr = CreateRequest(item.Href);
-            wr.Method = "DELETE";
+            HttpWebRequest wr = CreateRequest(item.Href, "DELETE");
             using (HttpWebResponse response = (HttpWebResponse)wr.GetResponse())
             {
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -125,9 +125,22 @@ namespace CloudAppSharp
             }
         }
 
-        public void SetPrivacy(CloudAppItem item, bool setPrivate)
+        public CloudAppItem SetPrivacy(CloudAppItem item, bool setPrivate)
         {
-            throw new NotImplementedException();
+            HttpWebRequest wr = CreateRequest(item.Href, "PUT",
+                JsonHelper.Serialize<CloudAppItemSecurity>(new CloudAppItemSecurity(setPrivate)));
+            using (HttpWebResponse response = (HttpWebResponse)wr.GetResponse())
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new WebException("CloudAppSharp: Expected status to be \"200 OK\"; got \"" + response.StatusCode + " " + response.StatusDescription + "\" instead",
+                        null, WebExceptionStatus.ProtocolError, response);
+                }
+                else
+                {
+                    return JsonHelper.Deserialize<CloudAppItem>(response);
+                }
+            }
         }
         
         /// <summary>
@@ -149,6 +162,11 @@ namespace CloudAppSharp
             return this.GetObjects<CloudAppItem>(new Uri("http://my.cl.ly/items?per_page=" + limit.ToString()));
         }
 
+        /// <summary>
+        /// Creates a bookmark from a given URI. Requires authentication.
+        /// </summary>
+        /// <param name="uri">The URI to create a bookmark from.</param>
+        /// <returns></returns>
         public CloudAppItem AddBookmark(Uri uri)
         {
             CloudAppSharpWebClient wc = new CloudAppSharpWebClient();
@@ -160,22 +178,46 @@ namespace CloudAppSharp
             return JsonHelper.Deserialize<CloudAppItem>(response);
         }
 
+        /// <summary>
+        /// Creates a bookmark from a given URI. Requires authentication.
+        /// </summary>
+        /// <param name="uri">The URI to create a bookmark from.</param>
+        /// <returns></returns>
         public CloudAppItem AddBookmark(string uri)
         {
             return this.AddBookmark(new Uri(uri));
         }
 
-        internal HttpWebRequest CreateRequest(Uri requestUri)
+        internal HttpWebRequest CreateRequest(Uri requestUri, string method)
         {
             HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(requestUri);
             wr.CookieContainer = this.cookies;
             wr.Proxy = Proxy;
+            wr.Method = method;
             return wr;
         }
 
-        internal HttpWebRequest CreateRequest(string requestUriString)
+        internal HttpWebRequest CreateRequest(string requestUriString, string method)
         {
-            return this.CreateRequest(new Uri(requestUriString));
+            return this.CreateRequest(new Uri(requestUriString), method);
+        }
+
+        internal HttpWebRequest CreateRequest(Uri requestUri, string method, string toSend)
+        {
+            HttpWebRequest wr = this.CreateRequest(requestUri, method);
+            byte[] byteArray = Encoding.UTF8.GetBytes(toSend);
+            wr.ContentType = "application/json";
+            wr.Accept = "application/json";
+            wr.ContentLength = byteArray.Length;
+            Stream dataStream = wr.GetRequestStream();
+            dataStream.Write(byteArray, 0, byteArray.Length);
+            dataStream.Close();
+            return wr;
+        }
+
+        internal HttpWebRequest CreateRequest(string requestUriString, string method, string toSend)
+        {
+            return this.CreateRequest(new Uri(requestUriString), method, toSend);
         }
 
         /// <summary>

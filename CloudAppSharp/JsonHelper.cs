@@ -40,5 +40,18 @@ namespace CloudAppSharp
             ms.Dispose();
             return obj;
         }
+
+        /// <summary>
+        /// Reads a string from a WebResponse in the JavaScript Object Notation (JSON) format and returns the deserialized object with the type designated by the specified generic type parameter.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="json">The WebReponse with the JSON string to deserialize.</param>
+        /// <returns>The deserialized JSON string as an object of type T.</returns>
+        public static T Deserialize<T>(System.Net.WebResponse response)
+        {
+            Stream dataStream = response.GetResponseStream();
+            StreamReader reader = new StreamReader(dataStream);
+            return Deserialize<T>(reader.ReadToEnd());
+        }
     }
 }

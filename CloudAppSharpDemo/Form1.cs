@@ -92,14 +92,20 @@ namespace CloudAppSharpDemo
 
             foreach (CloudAppItem item in items)
             {
-                ListViewItem itemListViewItem = listViewUploads.Items.Add(item.Name);
-                itemListViewItem.Tag = item;
-                itemListViewItem.SubItems.Add(""); // icon
-                itemListViewItem.SubItems.Add(item.ViewCounter.ToString());
-                itemListViewItem.SubItems.Add(item.Private ? "N" : "Y");
-                itemListViewItem.SubItems.Add(item.CreatedAt);
-                itemListViewItem.SubItems.Add(item.UpdatedAt);
+                FillListItem(listViewUploads.Items.Add(""), item);
             }
+        }
+
+        private void FillListItem(ListViewItem listViewItem, CloudAppItem cloudAppItem)
+        {
+            listViewItem.SubItems.Clear();
+            listViewItem.Tag = cloudAppItem;
+            listViewItem.Text = cloudAppItem.Name;
+            listViewItem.SubItems.Add(""); // icon
+            listViewItem.SubItems.Add(cloudAppItem.ViewCounter.ToString());
+            listViewItem.SubItems.Add(cloudAppItem.Private ? "N" : "Y");
+            listViewItem.SubItems.Add(cloudAppItem.CreatedAt);
+            listViewItem.SubItems.Add(cloudAppItem.UpdatedAt);
         }
 
         private void listViewUploads_SelectedIndexChanged(object sender, EventArgs e)
@@ -115,7 +121,8 @@ namespace CloudAppSharpDemo
             if (MessageBox.Show("Do you want to make this item " + (item.Private ? "public" : "private") + "?",
                 "CloudAppSharp Demo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
             {
-                cloudApp.SetPrivacy(item, !item.Private);
+                CloudAppItem itemNew = cloudApp.SetPrivacy(item, !item.Private);
+                FillListItem(listViewUploads.FocusedItem, itemNew);
             }
         }
 

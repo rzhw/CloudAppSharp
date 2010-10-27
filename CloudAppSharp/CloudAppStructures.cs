@@ -184,6 +184,27 @@ namespace CloudAppSharp
     }
 
     [DataContract]
+    public class CloudAppItemSecurity
+    {
+        public CloudAppItemSecurity() { }
+
+        public CloudAppItemSecurity(bool setPrivate)
+        {
+            Item = new CloudAppItemSecurityDetails { Private = setPrivate };
+        }
+
+        [DataMember(Name = "item")]
+        public CloudAppItemSecurityDetails Item { get; set; }
+
+        [DataContract]
+        public class CloudAppItemSecurityDetails
+        {
+            [DataMember(Name = "private")]
+            public bool Private { get; set; }
+        }
+    }
+
+    [DataContract]
     internal class CloudAppNewItemParams
     {
         [DataMember]
