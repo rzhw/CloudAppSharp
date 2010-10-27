@@ -117,10 +117,10 @@ namespace CloudAppSharp
         /// <summary>
         /// Deletes an item hosted on CloudApp uploaded by the logged in user. Requires authentication.
         /// </summary>
-        /// <param name="uri">The uri to the item in question (e.g. http://cl.ly/gee) </param>
-        public void DeleteItemFromUri(Uri uri)
+        /// <param name="item">The item to delete</param>
+        public void DeleteItem(CloudAppItem item)
         {
-            HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(uri);
+            HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(item.Href);
             wr.Proxy = Proxy;
             wr.CookieContainer = this.cookies;
             wr.Method = "DELETE";
@@ -131,15 +131,6 @@ namespace CloudAppSharp
                     throw new WebException("CloudAppSharp: Expected status to be \"200 OK\"; got \"" + response.StatusCode + " " + response.StatusDescription + "\" instead", WebExceptionStatus.ProtocolError);
                 }
             }
-        }
-
-        /// <summary>
-        /// Deletes an item hosted on CloudApp uploaded by the logged in user. Requires authentication.
-        /// </summary>
-        /// <param name="uri">The uri to the item in question (e.g. http://cl.ly/gee) </param>
-        public void DeleteItemFromUri(string uri)
-        {
-            DeleteItemFromUri(new Uri(uri));
         }
 
         public void SetPrivacy(CloudAppItem item, bool setPrivate)

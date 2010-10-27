@@ -125,7 +125,7 @@ namespace CloudAppSharpDemo
             if (MessageBox.Show("Are you sure you want to delete " + item.Name + "?",
                 "CloudAppSharp Demo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
             {
-                cloudApp.DeleteItemFromUri(item.Href);
+                cloudApp.DeleteItem(item);
                 buttonUploadsRefresh.PerformClick();
             }
         }
