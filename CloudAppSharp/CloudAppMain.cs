@@ -141,6 +141,11 @@ namespace CloudAppSharp
         {
             DeleteItemFromUri(new Uri(uri));
         }
+
+        public void SetPrivacy(CloudAppItem item, bool setPrivate)
+        {
+            throw new NotImplementedException();
+        }
         
         /// <summary>
         /// Retrieves a list of items uploaded by the user to CloudApp. Requires authentication.
