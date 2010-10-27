@@ -44,16 +44,20 @@ namespace CloudAppSharp
 
         private string GetJson(Uri uri)
         {
-            CloudAppSharpWebClient wc = new CloudAppSharpWebClient();
-            wc.m_container = this.cookies;
-            return new StreamReader(wc.OpenRead(uri)).ReadToEnd();
+            HttpWebRequest wr = CreateRequest(uri, "GET");
+
+            using (HttpWebResponse response = (HttpWebResponse)wr.GetResponse())
+            {
+                Stream dataStream = response.GetResponseStream();
+                return new StreamReader(dataStream).ReadToEnd();
+            }
         }
 
         private static string GetJsonStatic(Uri uri)
         {
             WebClient wc = new WebClient();
             wc.Headers.Add("Accept", "application/json");
-            return new StreamReader(wc.OpenRead(uri)).ReadToEnd();
+            return wc.DownloadString(uri);
         }
 
         private Uri GetUriFromCloudAppType<T>()

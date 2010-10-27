@@ -69,18 +69,13 @@ namespace CloudAppSharp
             jsonUris.Add(typeof(CloudAppItem), "http://my.cl.ly/items");
             jsonUris.Add(typeof(CloudAppNewItem), "http://my.cl.ly/items/new");
 
-            // Our working client
-            CloudAppSharpWebClient wc = new CloudAppSharpWebClient();
+            // Two stones, one bird: Validate our credentials, AND get our cookies!
+            HttpWebRequest wr = CreateRequest("http://my.cl.ly/items/new", "GET");
+            wr.Credentials = new DigestCredentials(email, password, isHA1);
 
-            // Authentication
-            wc.Credentials = new DigestCredentials(email, password, isHA1);
-
-            // Say, are these credentials valid?
-            wc.OpenRead("http://my.cl.ly/items/new");
-            credentials = (DigestCredentials)wc.Credentials;
-
-            // We now have some cookies! Yum.
-            cookies = wc.m_container;
+            wr.GetResponse(); // Problem? It'll throw an exception.
+            credentials = (DigestCredentials)wr.Credentials;
+            cookies = wr.CookieContainer;
         }
 
         public DigestCredentials GetCredentials()
@@ -196,6 +191,7 @@ namespace CloudAppSharp
             wr.CookieContainer = this.cookies;
             wr.Proxy = Proxy;
             wr.Method = method;
+            wr.Accept = "application/json";
             return wr;
         }
 
@@ -207,9 +203,8 @@ namespace CloudAppSharp
         internal HttpWebRequest CreateRequest(Uri requestUri, string method, string toSend)
         {
             HttpWebRequest wr = this.CreateRequest(requestUri, method);
-            byte[] byteArray = Encoding.UTF8.GetBytes(toSend);
             wr.ContentType = "application/json";
-            wr.Accept = "application/json";
+            byte[] byteArray = Encoding.UTF8.GetBytes(toSend);
             wr.ContentLength = byteArray.Length;
             Stream dataStream = wr.GetRequestStream();
             dataStream.Write(byteArray, 0, byteArray.Length);
@@ -220,34 +215,6 @@ namespace CloudAppSharp
         internal HttpWebRequest CreateRequest(string requestUriString, string method, string toSend)
         {
             return this.CreateRequest(new Uri(requestUriString), method, toSend);
-        }
-
-        /// <summary>
-        /// Provides common methods for sending data to and receiving data from a resource identified by a URI,
-        /// and in addition, retains cookies and accepts JSON data where possible.
-        /// <para>Original class (CookieAwareWebClient) written by Yuriy Solodkyy.</para>
-        /// </summary>
-        internal class CloudAppSharpWebClient : WebClient
-        {
-            public CookieContainer m_container = new CookieContainer();
-
-            protected override WebRequest GetWebRequest(Uri address)
-            {
-                WebRequest request = base.GetWebRequest(address);
-                if (request is HttpWebRequest)
-                {
-                    // We'll need to take in cookies to allow for the third step of the upload process to complete
-                    (request as HttpWebRequest).CookieContainer = m_container;
-
-                    // We can understand JSON! Really!
-                    (request as HttpWebRequest).ContentType = "application/json";
-                    (request as HttpWebRequest).Accept = "application/json";
-
-                    // The proxy!
-                    (request as HttpWebRequest).Proxy = CloudApp.Proxy;
-                }
-                return request;
-            }
         }
     }
 }

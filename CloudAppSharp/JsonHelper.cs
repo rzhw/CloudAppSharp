@@ -50,8 +50,7 @@ namespace CloudAppSharp
         public static T Deserialize<T>(System.Net.WebResponse response)
         {
             Stream dataStream = response.GetResponseStream();
-            StreamReader reader = new StreamReader(dataStream);
-            return Deserialize<T>(reader.ReadToEnd());
+            return Deserialize<T>(new StreamReader(dataStream).ReadToEnd());
         }
     }
 }
