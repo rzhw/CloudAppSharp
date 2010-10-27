@@ -62,6 +62,9 @@ namespace CloudAppSharp
             }
         }
 
+        [DataMember(Name = "private")]
+        public bool Private { get; set; }
+
         [DataMember(Name = "url")]
         public string Url { get; set; }
 
