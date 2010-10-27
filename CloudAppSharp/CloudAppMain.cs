@@ -115,6 +115,7 @@ namespace CloudAppSharp
         public void DeleteItem(CloudAppItem item)
         {
             HttpWebRequest wr = CreateRequest(item.Href, "DELETE");
+
             using (HttpWebResponse response = (HttpWebResponse)wr.GetResponse())
             {
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -129,6 +130,7 @@ namespace CloudAppSharp
         {
             HttpWebRequest wr = CreateRequest(item.Href, "PUT",
                 JsonHelper.Serialize<CloudAppItemSecurity>(new CloudAppItemSecurity(setPrivate)));
+
             using (HttpWebResponse response = (HttpWebResponse)wr.GetResponse())
             {
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -169,13 +171,13 @@ namespace CloudAppSharp
         /// <returns></returns>
         public CloudAppItem AddBookmark(Uri uri)
         {
-            CloudAppSharpWebClient wc = new CloudAppSharpWebClient();
-            wc.m_container = this.cookies;
+            HttpWebRequest wr = CreateRequest("http://my.cl.ly/items", "POST",
+                JsonHelper.Serialize<CloudAppNewBookmark>(new CloudAppNewBookmark(uri.ToString(), uri.ToString())));
 
-            string toSend = JsonHelper.Serialize<CloudAppNewBookmark>(new CloudAppNewBookmark(uri.ToString(), uri.ToString()));
-
-            string response = wc.UploadString("http://my.cl.ly/items", "POST", toSend);
-            return JsonHelper.Deserialize<CloudAppItem>(response);
+            using (HttpWebResponse response = (HttpWebResponse)wr.GetResponse())
+            {
+                return JsonHelper.Deserialize<CloudAppItem>(response);
+            }
         }
 
         /// <summary>
