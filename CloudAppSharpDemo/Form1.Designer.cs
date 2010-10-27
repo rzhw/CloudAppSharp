@@ -61,6 +61,8 @@
             this.groupBoxAddBookmark = new System.Windows.Forms.GroupBox();
             this.buttonAddBookmark = new System.Windows.Forms.Button();
             this.textBoxAddBookmark = new System.Windows.Forms.TextBox();
+            this.labelStatus = new System.Windows.Forms.Label();
+            this.columnHeaderPublic = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxCredentials.SuspendLayout();
             this.groupBoxUploads.SuspendLayout();
             this.groupBoxUploadFile.SuspendLayout();
@@ -200,6 +202,7 @@
             this.columnHeaderName,
             this.columnHeaderIcon,
             this.columnHeaderViews,
+            this.columnHeaderPublic,
             this.columnHeaderAdded,
             this.columnHeaderUpdated});
             this.listViewUploads.FullRowSelect = true;
@@ -232,12 +235,12 @@
             // columnHeaderAdded
             // 
             this.columnHeaderAdded.Text = "Added";
-            this.columnHeaderAdded.Width = 150;
+            this.columnHeaderAdded.Width = 140;
             // 
             // columnHeaderUpdated
             // 
             this.columnHeaderUpdated.Text = "Updated";
-            this.columnHeaderUpdated.Width = 150;
+            this.columnHeaderUpdated.Width = 140;
             // 
             // buttonUploadsRefresh
             // 
@@ -419,12 +422,27 @@
             this.textBoxAddBookmark.TabIndex = 0;
             this.textBoxAddBookmark.Text = "http://www.google.com/";
             // 
+            // labelStatus
+            // 
+            this.labelStatus.AutoSize = true;
+            this.labelStatus.Location = new System.Drawing.Point(224, 20);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(70, 13);
+            this.labelStatus.TabIndex = 7;
+            this.labelStatus.Text = "Not logged in";
+            // 
+            // columnHeaderPublic
+            // 
+            this.columnHeaderPublic.Text = "Pub";
+            this.columnHeaderPublic.Width = 35;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(624, 593);
+            this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.groupBoxAddBookmark);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupBoxDetailsFromUrl);
@@ -448,6 +466,7 @@
             this.groupBoxAddBookmark.ResumeLayout(false);
             this.groupBoxAddBookmark.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -485,6 +504,8 @@
         private System.Windows.Forms.Button buttonAddBookmark;
         private System.Windows.Forms.Button buttonUploadsDelete;
         private System.Windows.Forms.Button buttonUploadsPrivacy;
+        private System.Windows.Forms.Label labelStatus;
+        private System.Windows.Forms.ColumnHeader columnHeaderPublic;
     }
 }
 

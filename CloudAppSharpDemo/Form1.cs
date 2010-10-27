@@ -35,9 +35,8 @@ namespace CloudAppSharpDemo
                 groupBoxUploads.Enabled = true;
                 buttonLogin.Text = "Logout";
                 DigestCredentials digestCredentials = cloudApp.GetCredentials();
-                // Just an example of how to get HA1.
-                MessageBox.Show(string.Format("Now logged in as {0} with login hash of {1}.", digestCredentials.Username,
-                                              digestCredentials.Ha1));
+                labelStatus.Text = String.Format("Logged in as {0} with hash {1}",
+                    digestCredentials.Username, digestCredentials.Ha1);
             }
             else
             {
@@ -49,6 +48,7 @@ namespace CloudAppSharpDemo
                 groupBoxUploadFile.Enabled = false;
                 groupBoxUploads.Enabled = false;
                 buttonLogin.Text = "Login";
+                labelStatus.Text = "Not logged in";
             }
         }
 
@@ -96,6 +96,7 @@ namespace CloudAppSharpDemo
                 itemListViewItem.Tag = item;
                 itemListViewItem.SubItems.Add(""); // icon
                 itemListViewItem.SubItems.Add(item.ViewCounter.ToString());
+                itemListViewItem.SubItems.Add(item.Private ? "N" : "Y");
                 itemListViewItem.SubItems.Add(item.CreatedAt);
                 itemListViewItem.SubItems.Add(item.UpdatedAt);
             }
@@ -111,7 +112,7 @@ namespace CloudAppSharpDemo
         private void buttonUploadsPrivacy_Click(object sender, EventArgs e)
         {
             CloudAppItem item = (CloudAppItem)listViewUploads.FocusedItem.Tag;
-            if (MessageBox.Show("This item is " + (item.Private ? "private" : "public") + ". Do you want to make it " + (item.Private ? "public" : "private") + "?",
+            if (MessageBox.Show("Do you want to make this item " + (item.Private ? "public" : "private") + "?",
                 "CloudAppSharp Demo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
             {
                 cloudApp.SetPrivacy(item, !item.Private);
