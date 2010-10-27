@@ -129,6 +129,9 @@ namespace CloudAppSharp
 
         [DataMember(Name = "updated_at")]
         public string UpdatedAt { get; set; }
+
+        [DataMember(Name = "deleted_at")]
+        public string DeletedAt { get; set; }
     }
 
     [DataContract]
