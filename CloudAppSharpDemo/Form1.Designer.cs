@@ -36,6 +36,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBoxUploads = new System.Windows.Forms.GroupBox();
+            this.buttonUploadsRename = new System.Windows.Forms.Button();
             this.buttonUploadsPrivacy = new System.Windows.Forms.Button();
             this.buttonUploadsDelete = new System.Windows.Forms.Button();
             this.buttonUploadsDetails = new System.Windows.Forms.Button();
@@ -43,6 +44,7 @@
             this.columnHeaderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderIcon = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderViews = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderPublic = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderAdded = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderUpdated = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonUploadsRefresh = new System.Windows.Forms.Button();
@@ -62,7 +64,6 @@
             this.buttonAddBookmark = new System.Windows.Forms.Button();
             this.textBoxAddBookmark = new System.Windows.Forms.TextBox();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.columnHeaderPublic = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxCredentials.SuspendLayout();
             this.groupBoxUploads.SuspendLayout();
             this.groupBoxUploadFile.SuspendLayout();
@@ -147,6 +148,7 @@
             // 
             this.groupBoxUploads.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxUploads.Controls.Add(this.buttonUploadsRename);
             this.groupBoxUploads.Controls.Add(this.buttonUploadsPrivacy);
             this.groupBoxUploads.Controls.Add(this.buttonUploadsDelete);
             this.groupBoxUploads.Controls.Add(this.buttonUploadsDetails);
@@ -160,10 +162,23 @@
             this.groupBoxUploads.TabStop = false;
             this.groupBoxUploads.Text = "Uploads";
             // 
+            // buttonUploadsRename
+            // 
+            this.buttonUploadsRename.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonUploadsRename.Enabled = false;
+            this.buttonUploadsRename.Location = new System.Drawing.Point(171, 145);
+            this.buttonUploadsRename.Name = "buttonUploadsRename";
+            this.buttonUploadsRename.Size = new System.Drawing.Size(75, 23);
+            this.buttonUploadsRename.TabIndex = 5;
+            this.buttonUploadsRename.Text = "Rename...";
+            this.buttonUploadsRename.UseVisualStyleBackColor = true;
+            this.buttonUploadsRename.Click += new System.EventHandler(this.buttonUploadsRename_Click);
+            // 
             // buttonUploadsPrivacy
             // 
+            this.buttonUploadsPrivacy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonUploadsPrivacy.Enabled = false;
-            this.buttonUploadsPrivacy.Location = new System.Drawing.Point(355, 145);
+            this.buttonUploadsPrivacy.Location = new System.Drawing.Point(90, 145);
             this.buttonUploadsPrivacy.Name = "buttonUploadsPrivacy";
             this.buttonUploadsPrivacy.Size = new System.Drawing.Size(75, 23);
             this.buttonUploadsPrivacy.TabIndex = 4;
@@ -173,8 +188,9 @@
             // 
             // buttonUploadsDelete
             // 
+            this.buttonUploadsDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonUploadsDelete.Enabled = false;
-            this.buttonUploadsDelete.Location = new System.Drawing.Point(275, 145);
+            this.buttonUploadsDelete.Location = new System.Drawing.Point(252, 145);
             this.buttonUploadsDelete.Name = "buttonUploadsDelete";
             this.buttonUploadsDelete.Size = new System.Drawing.Size(75, 23);
             this.buttonUploadsDelete.TabIndex = 3;
@@ -184,9 +200,9 @@
             // 
             // buttonUploadsDetails
             // 
-            this.buttonUploadsDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonUploadsDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonUploadsDetails.Enabled = false;
-            this.buttonUploadsDetails.Location = new System.Drawing.Point(436, 145);
+            this.buttonUploadsDetails.Location = new System.Drawing.Point(9, 145);
             this.buttonUploadsDetails.Name = "buttonUploadsDetails";
             this.buttonUploadsDetails.Size = new System.Drawing.Size(75, 23);
             this.buttonUploadsDetails.TabIndex = 2;
@@ -231,6 +247,11 @@
             // 
             this.columnHeaderViews.Text = "Views";
             this.columnHeaderViews.Width = 42;
+            // 
+            // columnHeaderPublic
+            // 
+            this.columnHeaderPublic.Text = "Pub";
+            this.columnHeaderPublic.Width = 35;
             // 
             // columnHeaderAdded
             // 
@@ -432,11 +453,6 @@
             this.labelStatus.TabIndex = 7;
             this.labelStatus.Text = "Not logged in";
             // 
-            // columnHeaderPublic
-            // 
-            this.columnHeaderPublic.Text = "Pub";
-            this.columnHeaderPublic.Width = 35;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -507,6 +523,7 @@
         private System.Windows.Forms.Button buttonUploadsPrivacy;
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.ColumnHeader columnHeaderPublic;
+        private System.Windows.Forms.Button buttonUploadsRename;
     }
 }
 

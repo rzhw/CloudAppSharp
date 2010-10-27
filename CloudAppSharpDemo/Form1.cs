@@ -12,7 +12,7 @@ namespace CloudAppSharpDemo
     public partial class Form1 : Form
     {
         private bool cloudAppLogged = false;
-        private CloudApp cloudApp;
+        public CloudApp cloudApp;
 
         public Form1()
         {
@@ -110,9 +110,10 @@ namespace CloudAppSharpDemo
 
         private void listViewUploads_SelectedIndexChanged(object sender, EventArgs e)
         {
-            buttonUploadsPrivacy.Enabled = true;
-            buttonUploadsDelete.Enabled = true;
             buttonUploadsDetails.Enabled = true;
+            buttonUploadsPrivacy.Enabled = true;
+            buttonUploadsRename.Enabled = true;
+            buttonUploadsDelete.Enabled = true;
         }
 
         private void buttonUploadsPrivacy_Click(object sender, EventArgs e)
@@ -123,6 +124,17 @@ namespace CloudAppSharpDemo
             {
                 CloudAppItem itemNew = cloudApp.SetPrivacy(item, !item.Private);
                 FillListItem(listViewUploads.FocusedItem, itemNew);
+            }
+        }
+
+        public CloudAppItem _tempItem;
+        private void buttonUploadsRename_Click(object sender, EventArgs e)
+        {
+            CloudAppItem item = (CloudAppItem)listViewUploads.FocusedItem.Tag;
+            using (FormRename formRename = new FormRename(this, item))
+            {
+                formRename.ShowDialog();
+                FillListItem(listViewUploads.FocusedItem, _tempItem);
             }
         }
 

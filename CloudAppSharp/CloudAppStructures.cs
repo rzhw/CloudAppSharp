@@ -205,6 +205,27 @@ namespace CloudAppSharp
     }
 
     [DataContract]
+    public class CloudAppItemRename
+    {
+        public CloudAppItemRename() { }
+
+        public CloudAppItemRename(string name)
+        {
+            Item = new CloudAppItemRenameDetails { Name = name };
+        }
+
+        [DataMember(Name = "item")]
+        public CloudAppItemRenameDetails Item { get; set; }
+
+        [DataContract]
+        public class CloudAppItemRenameDetails
+        {
+            [DataMember(Name = "name")]
+            public string Name { get; set; }
+        }
+    }
+
+    [DataContract]
     internal class CloudAppNewItemParams
     {
         [DataMember]

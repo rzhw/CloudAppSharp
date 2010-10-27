@@ -110,15 +110,7 @@ namespace CloudAppSharp
         public void DeleteItem(CloudAppItem item)
         {
             HttpWebRequest wr = CreateRequest(item.Href, "DELETE");
-
-            using (HttpWebResponse response = (HttpWebResponse)wr.GetResponse())
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    throw new WebException("CloudAppSharp: Expected status to be \"200 OK\"; got \"" + response.StatusCode + " " + response.StatusDescription + "\" instead",
-                        null, WebExceptionStatus.ProtocolError, response);
-                }
-            }
+            GetRequestResponse(wr).Close();
         }
 
         public CloudAppItem SetPrivacy(CloudAppItem item, bool setPrivate)
@@ -126,17 +118,20 @@ namespace CloudAppSharp
             HttpWebRequest wr = CreateRequest(item.Href, "PUT",
                 JsonHelper.Serialize<CloudAppItemSecurity>(new CloudAppItemSecurity(setPrivate)));
 
-            using (HttpWebResponse response = (HttpWebResponse)wr.GetResponse())
+            using (HttpWebResponse response = GetRequestResponse(wr))
             {
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    throw new WebException("CloudAppSharp: Expected status to be \"200 OK\"; got \"" + response.StatusCode + " " + response.StatusDescription + "\" instead",
-                        null, WebExceptionStatus.ProtocolError, response);
-                }
-                else
-                {
-                    return JsonHelper.Deserialize<CloudAppItem>(response);
-                }
+                return JsonHelper.Deserialize<CloudAppItem>(response);
+            }
+        }
+
+        public CloudAppItem RenameItem(CloudAppItem item, string newName)
+        {
+            HttpWebRequest wr = CreateRequest(item.Href, "PUT",
+                JsonHelper.Serialize<CloudAppItemRename>(new CloudAppItemRename(newName)));
+
+            using (HttpWebResponse response = GetRequestResponse(wr))
+            {
+                return JsonHelper.Deserialize<CloudAppItem>(response);
             }
         }
         
@@ -215,6 +210,21 @@ namespace CloudAppSharp
         internal HttpWebRequest CreateRequest(string requestUriString, string method, string toSend)
         {
             return this.CreateRequest(new Uri(requestUriString), method, toSend);
+        }
+
+        internal HttpWebResponse GetRequestResponse(HttpWebRequest wr)
+        {
+            HttpWebResponse response = (HttpWebResponse)wr.GetResponse();
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new WebException("CloudAppSharp: Expected status to be \"200 OK\"; got \"" + response.StatusCode + " " + response.StatusDescription + "\" instead",
+                    null, WebExceptionStatus.ProtocolError, response);
+            }
+            else
+            {
+                return response;
+            }
         }
     }
 }
