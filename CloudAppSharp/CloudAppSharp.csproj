@@ -46,11 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CloudAppJson.cs" />
     <Compile Include="CloudAppUpload.cs" />
     <Compile Include="DigestAuth.cs" />
     <Compile Include="JsonHelper.cs" />
-    <Compile Include="CloudAppJson.cs" />
-    <Compile Include="CloudApp.cs" />
+    <Compile Include="CloudAppStructures.cs" />
+    <Compile Include="CloudAppMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Upload.cs" />
     <Compile Include="UploadAsync.cs" />

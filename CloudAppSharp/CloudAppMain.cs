@@ -177,48 +177,6 @@ namespace CloudAppSharp
             return this.AddBookmark(new Uri(uri));
         }
 
-        public T GetObject<T>(Uri uri)
-        {
-            return JsonHelper.Deserialize<T>(this.GetJson(uri));
-        }
-
-        public T GetObject<T>()
-        {
-            return JsonHelper.Deserialize<T>(this.GetJson(this.GetUriFromCloudAppType<T>()));
-        }
-
-        public List<T> GetObjects<T>(Uri uri)
-        {
-            return JsonHelper.Deserialize<List<T>>(this.GetJson(uri));
-        }
-
-        private string GetJson(Uri uri)
-        {
-            CloudAppSharpWebClient wc = new CloudAppSharpWebClient();
-            wc.m_container = this.cookies;
-            return new StreamReader(wc.OpenRead(uri)).ReadToEnd();
-        }
-
-        private static string GetJsonStatic(Uri uri)
-        {
-            WebClient wc = new WebClient();
-            wc.Proxy = Proxy;
-            wc.Headers.Add("Accept", "application/json");
-            return new StreamReader(wc.OpenRead(uri)).ReadToEnd();
-        }
-
-        private Uri GetUriFromCloudAppType<T>()
-        {
-            if (jsonUris.ContainsKey(typeof(T)))
-            {
-                return new Uri(jsonUris[typeof(T)]);
-            }
-            else
-            {
-                throw new ArgumentException("The type passed to a method in the CloudAppSharp namespace doesn't have an assigned URI. If the type exists, then you will need to manually pass a URI.");
-            }
-        }
-
         /// <summary>
         /// Provides common methods for sending data to and receiving data from a resource identified by a URI,
         /// and in addition, retains cookies and accepts JSON data where possible.
