@@ -113,15 +113,14 @@ namespace CloudAppSharp
         /// <param name="item">The item to delete</param>
         public void DeleteItem(CloudAppItem item)
         {
-            HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(item.Href);
-            wr.Proxy = Proxy;
-            wr.CookieContainer = this.cookies;
+            HttpWebRequest wr = CreateRequest(item.Href);
             wr.Method = "DELETE";
             using (HttpWebResponse response = (HttpWebResponse)wr.GetResponse())
             {
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    throw new WebException("CloudAppSharp: Expected status to be \"200 OK\"; got \"" + response.StatusCode + " " + response.StatusDescription + "\" instead", WebExceptionStatus.ProtocolError);
+                    throw new WebException("CloudAppSharp: Expected status to be \"200 OK\"; got \"" + response.StatusCode + " " + response.StatusDescription + "\" instead",
+                        null, WebExceptionStatus.ProtocolError, response);
                 }
             }
         }
@@ -164,6 +163,19 @@ namespace CloudAppSharp
         public CloudAppItem AddBookmark(string uri)
         {
             return this.AddBookmark(new Uri(uri));
+        }
+
+        internal HttpWebRequest CreateRequest(Uri requestUri)
+        {
+            HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(requestUri);
+            wr.CookieContainer = this.cookies;
+            wr.Proxy = Proxy;
+            return wr;
+        }
+
+        internal HttpWebRequest CreateRequest(string requestUriString)
+        {
+            return this.CreateRequest(new Uri(requestUriString));
         }
 
         /// <summary>
