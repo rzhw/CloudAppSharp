@@ -145,14 +145,16 @@ namespace CloudAppSharpDemo
         {
             pictureBoxDetails.Image = UriToBitmap(item.Icon);
 
-            labelDetailsName.Text = String.Format("{0} ({1}, {2} views)", item.Name, item.ItemType, item.ViewCounter);
+            labelDetailsName.Text = String.Format("{0} ({1}, {2} views, {3})",
+                item.Name, item.ItemType, item.ViewCounter, item.Private ? "Private" : "Public");
 
-            textBoxDetails.Text = String.Format("Href: {0}\r\nURL: {1}\r\n{2}\r\nCreated: {3}\r\nUpdated: {4}",
-                item.Href,
+            textBoxDetails.Text = String.Format("URL: {0}\r\nHref: {1}\r\n{2}\r\nCreated: {3}\r\nUpdated: {4}\r\nDeleted: {5}",
                 item.Url,
+                item.Href,
                 item.ItemType == CloudAppItemType.Bookmark ? "Redirect URL: " + item.RedirectUrl : "Remote URL: " + item.RemoteUrl,
                 item.CreatedAt,
-                item.UpdatedAt
+                item.UpdatedAt,
+                String.IsNullOrEmpty(item.DeletedAt) ? "null" : item.DeletedAt
             );
         }
 

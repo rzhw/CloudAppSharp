@@ -313,7 +313,7 @@
             this.groupDetails.Controls.Add(this.textBoxDetails);
             this.groupDetails.Location = new System.Drawing.Point(12, 462);
             this.groupDetails.Name = "groupDetails";
-            this.groupDetails.Size = new System.Drawing.Size(600, 120);
+            this.groupDetails.Size = new System.Drawing.Size(600, 138);
             this.groupDetails.TabIndex = 3;
             this.groupDetails.TabStop = false;
             this.groupDetails.Text = "Item Details";
@@ -339,12 +339,13 @@
             // 
             // textBoxDetails
             // 
-            this.textBoxDetails.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.textBoxDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxDetails.Location = new System.Drawing.Point(7, 41);
             this.textBoxDetails.Multiline = true;
             this.textBoxDetails.Name = "textBoxDetails";
-            this.textBoxDetails.Size = new System.Drawing.Size(585, 71);
+            this.textBoxDetails.Size = new System.Drawing.Size(585, 89);
             this.textBoxDetails.TabIndex = 0;
             // 
             // groupBoxDetailsFromUrl
@@ -441,7 +442,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(624, 593);
+            this.ClientSize = new System.Drawing.Size(624, 612);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.groupBoxAddBookmark);
             this.Controls.Add(this.pictureBox1);
