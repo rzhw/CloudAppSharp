@@ -47,7 +47,8 @@ namespace CloudAppSharp
         /// </summary>
         /// <param name="email">The email associated with the credentials.</param>
         /// <param name="password">The password associated with the credentials.</param>
-        public CloudApp(string email, string password) : this(email, password, false)
+        public CloudApp(string email, string password)
+            : this(email, password, false)
         {
         }
 
@@ -71,15 +72,7 @@ namespace CloudAppSharp
             CloudAppSharpWebClient wc = new CloudAppSharpWebClient();
 
             // Authentication
-
             wc.Credentials = new DigestCredentials(email, password, isHA1);
-
-            //// The user agent, so Linebreak can do some fun analytics if they so choose
-            //wcMain.Headers.Add("User-Agent", String.Format("CloudAppSharp/{0} {1}/{2} {3}",
-            //    "0.8.1",
-            //    System.Reflection.Assembly.GetExecutingAssembly().GetName().Name,
-            //    System.Reflection.Assembly.GetExecutingAssembly().GetName().Version,
-            //    ""));
 
             // Say, are these credentials valid?
             wc.OpenRead("http://my.cl.ly/items/new");
