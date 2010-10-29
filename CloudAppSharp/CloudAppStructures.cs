@@ -47,13 +47,22 @@ namespace CloudAppSharp
         {
             get
             {
-                // If we have a null name and it's a bookmark we have, then the name is the URL!
-                if (String.IsNullOrEmpty(_name) && this.ItemType == CloudAppItemType.Bookmark)
+                // Passing over a null string is not a very good idea, so...
+                if (String.IsNullOrEmpty(_name))
                 {
-                    _name = this.RedirectUrl;
+                    // If it's a bookmark we have, then the name is the URL!
+                    if (this.ItemType == CloudAppItemType.Bookmark)
+                    {
+                        _name = this.RedirectUrl;
+                    }
+                    // Otherwise, we'll just pass a blank string.
+                    else
+                    {
+                        _name = "";
+                    }
                 }
 
-                // Return _name. Even if it's null.
+                // And now we return _name.
                 return _name;
             }
             set
