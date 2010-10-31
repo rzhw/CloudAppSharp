@@ -34,7 +34,6 @@ namespace CloudAppSharp
     {
         private DigestCredentials credentials = null;
         private CookieContainer cookies = new CookieContainer();
-        private static Dictionary<Type, string> jsonUris = new Dictionary<Type, string>();
         public static IWebProxy Proxy { get; set; }
 
         static CloudApp()
@@ -63,11 +62,6 @@ namespace CloudAppSharp
         {
             // CloudApp seems to store emails in its database lowercased.
             email = email.ToLower();
-
-            // JSON URIs
-            jsonUris.Clear();
-            jsonUris.Add(typeof(CloudAppItem), "http://my.cl.ly/items");
-            jsonUris.Add(typeof(CloudAppNewItem), "http://my.cl.ly/items/new");
 
             // Two stones, one bird: Validate our credentials, AND get our cookies!
             HttpWebRequest wr = CreateRequest("http://my.cl.ly/items/new", "GET");
@@ -218,8 +212,7 @@ namespace CloudAppSharp
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                throw new WebException("CloudAppSharp: Expected status to be \"200 OK\"; got \"" + response.StatusCode + " " + response.StatusDescription + "\" instead",
-                    null, WebExceptionStatus.ProtocolError, response);
+                throw new CloudAppInvalidProtocolException(HttpStatusCode.OK, response);
             }
             else
             {

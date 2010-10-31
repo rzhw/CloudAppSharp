@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 
 namespace CloudAppSharp
 {
@@ -15,7 +17,7 @@ namespace CloudAppSharp
         /// <returns>The serialized object in JSON form.</returns>
         public static string Serialize<T>(T obj)
         {
-            System.Runtime.Serialization.Json.DataContractJsonSerializer serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(obj.GetType());
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
             MemoryStream ms = new MemoryStream();
             serializer.WriteObject(ms, obj);
             string retVal = Encoding.Default.GetString(ms.ToArray());
@@ -34,7 +36,7 @@ namespace CloudAppSharp
         {
             T obj = Activator.CreateInstance<T>();
             MemoryStream ms = new MemoryStream(Encoding.Unicode.GetBytes(json));
-            System.Runtime.Serialization.Json.DataContractJsonSerializer serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(obj.GetType());
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
             obj = (T)serializer.ReadObject(ms);
             ms.Close();
             ms.Dispose();
@@ -49,8 +51,10 @@ namespace CloudAppSharp
         /// <returns>The deserialized JSON string as an object of type T.</returns>
         public static T Deserialize<T>(System.Net.WebResponse response)
         {
-            Stream dataStream = response.GetResponseStream();
-            return Deserialize<T>(new StreamReader(dataStream).ReadToEnd());
+            using (Stream dataStream = response.GetResponseStream())
+            {
+                return Deserialize<T>(new StreamReader(dataStream).ReadToEnd());
+            }
         }
     }
 }

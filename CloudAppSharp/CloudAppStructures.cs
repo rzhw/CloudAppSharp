@@ -36,7 +36,10 @@ namespace CloudAppSharp
     }
 
     [DataContract]
-    public class CloudAppItem
+    public class CloudAppJsonBase { }
+
+    [DataContract]
+    public class CloudAppItem : CloudAppJsonBase
     {
         [DataMember(Name = "href")]
         public string Href { get; set; }
@@ -144,13 +147,10 @@ namespace CloudAppSharp
     }
 
     [DataContract]
-    public class CloudAppNewItem
+    public class CloudAppNewItem : CloudAppJsonBase
     {
         [DataMember(Name = "url", IsRequired = true)]
         public string Url { get; set; }
-
-        [DataMember(Name = "params", IsRequired = true)]
-        internal CloudAppNewItemParams ParamsClass { get; set; }
 
         public NameValueCollection Params
         {
@@ -166,10 +166,35 @@ namespace CloudAppSharp
                 return dParams;
             }
         }
+
+        [DataMember(Name = "params", IsRequired = true)]
+        internal CloudAppNewItemParams ParamsClass { get; set; }
+
+        [DataContract]
+        internal class CloudAppNewItemParams : CloudAppJsonBase
+        {
+            [DataMember]
+            public string signature { get; set; }
+
+            [DataMember]
+            public string acl { get; set; }
+
+            [DataMember]
+            public string policy { get; set; }
+
+            [DataMember]
+            public string success_action_redirect { get; set; }
+
+            [DataMember]
+            public string key { get; set; }
+
+            [DataMember]
+            public string AWSAccessKeyId { get; set; }
+        }
     }
 
     [DataContract]
-    public class CloudAppNewBookmark
+    public class CloudAppNewBookmark : CloudAppJsonBase
     {
         public CloudAppNewBookmark() { }
 
@@ -182,7 +207,7 @@ namespace CloudAppSharp
         public CloudAppNewBookmarkDetails Item { get; set; }
         
         [DataContract]
-        public class CloudAppNewBookmarkDetails
+        public class CloudAppNewBookmarkDetails : CloudAppJsonBase
         {
             [DataMember(Name = "name")]
             public string Name { get; set; }
@@ -193,7 +218,7 @@ namespace CloudAppSharp
     }
 
     [DataContract]
-    public class CloudAppItemSecurity
+    public class CloudAppItemSecurity : CloudAppJsonBase
     {
         public CloudAppItemSecurity() { }
 
@@ -206,7 +231,7 @@ namespace CloudAppSharp
         public CloudAppItemSecurityDetails Item { get; set; }
 
         [DataContract]
-        public class CloudAppItemSecurityDetails
+        public class CloudAppItemSecurityDetails : CloudAppJsonBase
         {
             [DataMember(Name = "private")]
             public bool Private { get; set; }
@@ -214,7 +239,7 @@ namespace CloudAppSharp
     }
 
     [DataContract]
-    public class CloudAppItemRename
+    public class CloudAppItemRename : CloudAppJsonBase
     {
         public CloudAppItemRename() { }
 
@@ -227,32 +252,10 @@ namespace CloudAppSharp
         public CloudAppItemRenameDetails Item { get; set; }
 
         [DataContract]
-        public class CloudAppItemRenameDetails
+        public class CloudAppItemRenameDetails : CloudAppJsonBase
         {
             [DataMember(Name = "name")]
             public string Name { get; set; }
         }
-    }
-
-    [DataContract]
-    internal class CloudAppNewItemParams
-    {
-        [DataMember]
-        public string signature { get; set; }
-
-        [DataMember]
-        public string acl { get; set; }
-
-        [DataMember]
-        public string policy { get; set; }
-
-        [DataMember]
-        public string success_action_redirect { get; set; }
-
-        [DataMember]
-        public string key { get; set; }
-
-        [DataMember]
-        public string AWSAccessKeyId { get; set; }
     }
 }

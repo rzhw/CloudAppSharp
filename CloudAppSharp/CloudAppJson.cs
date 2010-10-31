@@ -29,17 +29,33 @@ namespace CloudAppSharp
     {
         public T GetObject<T>(Uri uri)
         {
-            return JsonHelper.Deserialize<T>(this.GetJson(uri));
-        }
-
-        public T GetObject<T>()
-        {
-            return JsonHelper.Deserialize<T>(this.GetJson(this.GetUriFromCloudAppType<T>()));
+            using (HttpWebResponse response = (HttpWebResponse)CreateRequest(uri, "GET").GetResponse())
+            {
+                try
+                {
+                    return JsonHelper.Deserialize<T>(response);
+                }
+                catch (System.Runtime.Serialization.SerializationException e)
+                {
+                    // We should only be specific if it's a JSON structure that's part of CloudAppSharp.
+                    if (typeof(T).BaseType == typeof(CloudAppJsonBase))
+                    {
+                        throw new CloudAppInvalidResponseException(
+                            "Response received from CloudApp is either not valid JSON or is missing expected parameters."
+                                + " The service and/or its API may be down, or its API may be incompatible with this release of CloudAppSharp.",
+                            e, WebExceptionStatus.ReceiveFailure, response);
+                    }
+                    else
+                    {
+                        throw e;
+                    }
+                }
+            }
         }
 
         public List<T> GetObjects<T>(Uri uri)
         {
-            return JsonHelper.Deserialize<List<T>>(this.GetJson(uri));
+            return GetObject<List<T>>(uri);
         }
 
         private string GetJson(Uri uri)
@@ -58,18 +74,6 @@ namespace CloudAppSharp
             WebClient wc = new WebClient();
             wc.Headers.Add("Accept", "application/json");
             return wc.DownloadString(uri);
-        }
-
-        private Uri GetUriFromCloudAppType<T>()
-        {
-            if (jsonUris.ContainsKey(typeof(T)))
-            {
-                return new Uri(jsonUris[typeof(T)]);
-            }
-            else
-            {
-                throw new ArgumentException("The type passed to a method in the CloudAppSharp namespace doesn't have an assigned URI. If the type exists, then you will need to manually pass a URI.");
-            }
         }
     }
 }

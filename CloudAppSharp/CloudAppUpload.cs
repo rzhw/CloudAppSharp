@@ -33,7 +33,7 @@ namespace CloudAppSharp
         /// <returns></returns>
         public CloudAppItem Upload(string fileName)
         {
-            CloudAppNewItem newItem = this.GetObject<CloudAppNewItem>();
+            CloudAppNewItem newItem = this.GetObject<CloudAppNewItem>(new Uri("http://my.cl.ly/items/new"));
             HttpWebResponse uploadResponse = (HttpWebResponse)SalientUpload.PostFile(new Uri(newItem.Url), newItem.Params, fileName, "file", null, null, false);
 
             if (uploadResponse.StatusCode == HttpStatusCode.SeeOther)
@@ -42,7 +42,7 @@ namespace CloudAppSharp
             }
             else
             {
-                throw new WebException("CloudAppSharp: Expected status to be \"303 See Other\"; got \"" + uploadResponse.StatusCode + " " + uploadResponse.StatusDescription + "\" instead", WebExceptionStatus.ProtocolError);
+                throw new CloudAppInvalidProtocolException(HttpStatusCode.SeeOther, uploadResponse);
             }
         }
 
@@ -60,7 +60,7 @@ namespace CloudAppSharp
 
             bw.DoWork += new DoWorkEventHandler((sender, e) =>
                 {
-                    e.Result = this.GetObject<CloudAppNewItem>();
+                    e.Result = this.GetObject<CloudAppNewItem>(new Uri("http://my.cl.ly/items/new"));
                 });
 
             bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler((sender, e) =>
@@ -104,7 +104,7 @@ namespace CloudAppSharp
                             }
                             else
                             {
-                                throw new WebException("CloudAppSharp: Expected status to be \"303 See Other\"; got \"" + uploadResponse.StatusCode + " " + uploadResponse.StatusDescription + "\" instead", WebExceptionStatus.ProtocolError);
+                                throw new CloudAppInvalidProtocolException(HttpStatusCode.SeeOther, uploadResponse);
                             }
                         });
 
