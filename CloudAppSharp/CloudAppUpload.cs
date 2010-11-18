@@ -38,7 +38,7 @@ namespace CloudAppSharp
 
             if (uploadResponse.StatusCode == HttpStatusCode.SeeOther)
             {
-                return this.GetObject<CloudAppItem>(new Uri(uploadResponse.Headers["Location"]));
+                return GetObject<CloudAppItem>(new Uri(uploadResponse.Headers["Location"]));
             }
             else
             {
@@ -58,58 +58,69 @@ namespace CloudAppSharp
         {
             BackgroundWorker bw = new BackgroundWorker();
 
-            bw.DoWork += new DoWorkEventHandler((sender, e) =>
+            bw.DoWork += (sender, e) =>
+            {
+                e.Result = this.GetObject<CloudAppNewItem>(new Uri("http://my.cl.ly/items/new"));
+            };
+
+            bw.RunWorkerCompleted += (sender, e) =>
+            {
+                CloudAppNewItem newItem = (CloudAppNewItem)e.Result;
+                SalientUploadAsync uploader;
+
+                try
                 {
-                    e.Result = this.GetObject<CloudAppNewItem>(new Uri("http://my.cl.ly/items/new"));
-                });
-
-            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler((sender, e) =>
+                    uploader = new SalientUploadAsync(new Uri(newItem.Url), newItem.Params, fileName, "file", null, null, false);
+                }
+                catch (Exception ex)
                 {
-                    CloudAppNewItem newItem = (CloudAppNewItem)e.Result;
-                    SalientUploadAsync uploader = new SalientUploadAsync(new Uri(newItem.Url), newItem.Params, fileName, "file", null, null, false);
+                    UploadAsyncCompleted(this, new CloudAppUploadCompletedEventArgs(ex));
+                    return;
+                }
 
-                    BackgroundWorker bw2 = new BackgroundWorker();
-                    bw2.WorkerReportsProgress = true;
-                    bw2.DoWork += new DoWorkEventHandler(uploader.DoWork);
+                BackgroundWorker bw2 = new BackgroundWorker();
+                bw2.WorkerReportsProgress = true;
+                bw2.DoWork += new DoWorkEventHandler(uploader.DoWork);
 
-                    if (UploadAsyncProgressChanged != null)
+                if (UploadAsyncProgressChanged != null)
+                {
+                    bw2.ProgressChanged += (sender2, e2) =>
                     {
-                        bw2.ProgressChanged += new ProgressChangedEventHandler((sender2, e2) =>
-                            {
-                                UploadAsyncProgressChanged(this, new CloudAppUploadProgressChangedEventArgs(e2.ProgressPercentage));
-                            });
-                    }
+                        UploadAsyncProgressChanged(this, new CloudAppUploadProgressChangedEventArgs(e2.ProgressPercentage));
+                    };
+                }
 
-                    bw2.RunWorkerCompleted += new RunWorkerCompletedEventHandler((sender2, e2) =>
+                bw2.RunWorkerCompleted += new RunWorkerCompletedEventHandler((sender2, e2) =>
+                    {
+                        uploader.Dispose();
+
+                        HttpWebResponse uploadResponse = (HttpWebResponse)e2.Result;
+
+                        if (uploadResponse.StatusCode == HttpStatusCode.SeeOther)
                         {
-                            uploader.Dispose();
-
-                            HttpWebResponse uploadResponse = (HttpWebResponse)e2.Result;
-
-                            if (uploadResponse.StatusCode == HttpStatusCode.SeeOther)
+                            if (UploadAsyncCompleted != null)
                             {
-                                if (UploadAsyncCompleted != null)
+                                BackgroundWorker bw3 = new BackgroundWorker();
+                                bw3.DoWork += (sender3, e3) =>
                                 {
-                                    BackgroundWorker bw3 = new BackgroundWorker();
-                                    bw3.DoWork += new DoWorkEventHandler((sender3, e3) =>
-                                        {
-                                            e3.Result = this.GetObject<CloudAppItem>(new Uri(uploadResponse.Headers["Location"]));
-                                        });
-                                    bw3.RunWorkerCompleted += new RunWorkerCompletedEventHandler((sender3, e3) =>
-                                        {
-                                            UploadAsyncCompleted(this, new CloudAppUploadCompletedEventArgs((CloudAppItem)e3.Result));
-                                        });
-                                    bw3.RunWorkerAsync();
-                                }
+                                    e3.Result = GetObject<CloudAppItem>(new Uri(uploadResponse.Headers["Location"]));
+                                };
+                                bw3.RunWorkerCompleted += (sender3, e3) =>
+                                {
+                                    UploadAsyncCompleted(this, new CloudAppUploadCompletedEventArgs((CloudAppItem)e3.Result));
+                                };
+                                bw3.RunWorkerAsync();
                             }
-                            else
-                            {
-                                throw new CloudAppInvalidProtocolException(HttpStatusCode.SeeOther, uploadResponse);
-                            }
-                        });
+                        }
+                        else
+                        {
+                            UploadAsyncCompleted(this, new CloudAppUploadCompletedEventArgs(
+                                new CloudAppInvalidProtocolException(HttpStatusCode.SeeOther, uploadResponse)));
+                        }
+                    });
 
-                    bw2.RunWorkerAsync();
-                });
+                bw2.RunWorkerAsync();
+            };
 
             bw.RunWorkerAsync();
         }
@@ -143,7 +154,12 @@ namespace CloudAppSharp
         {
             UploadedItem = uploadedItem;
         }
+        public CloudAppUploadCompletedEventArgs(Exception error)
+        {
+            Error = error;
+        }
 
         public CloudAppItem UploadedItem { get; set; }
+        public Exception Error { get; set; }
     }
 }
