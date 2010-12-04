@@ -149,6 +149,12 @@ namespace CloudAppSharp
     [DataContract]
     public class CloudAppNewItem : CloudAppJsonBase
     {
+        [DataMember(Name = "max_upload_size", IsRequired = true)]
+        public int MaximumUploadSize { get; set; }
+
+        [DataMember(Name = "uploads_remaining", IsRequired = true)]
+        public int UploadsRemaining { get; set; }
+
         [DataMember(Name = "url", IsRequired = true)]
         public string Url { get; set; }
 
@@ -156,6 +162,10 @@ namespace CloudAppSharp
         {
             get
             {
+                // CloudApp will not return any parameters if the free plan limits are exceeded
+                if (ParamsClass == null)
+                    return null;
+
                 NameValueCollection dParams = new NameValueCollection();
                 dParams.Add("signature", ParamsClass.signature);
                 dParams.Add("acl", ParamsClass.acl);
@@ -167,7 +177,7 @@ namespace CloudAppSharp
             }
         }
 
-        [DataMember(Name = "params", IsRequired = true)]
+        [DataMember(Name = "params")]
         internal CloudAppNewItemParams ParamsClass { get; set; }
 
         [DataContract]

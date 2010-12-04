@@ -15,6 +15,7 @@ namespace CloudAppSharp
         {
         }
     }
+
     /// <summary>
     /// The exception that is thrown when a response received from the CloudApp service is complete but had an invalid protocol.
     /// </summary>
@@ -25,5 +26,21 @@ namespace CloudAppSharp
                 null, WebExceptionStatus.ProtocolError, response)
         {
         }
+    }
+
+    /// <summary>
+    /// The exception that is thrown when the daily upload limit has been exceeded.
+    /// </summary>
+    public class CloudAppUploadCountLimitExceededException : Exception
+    {
+        public CloudAppUploadCountLimitExceededException() { }
+    }
+
+    /// <summary>
+    /// The exception that is thrown when a file that is being uploaded exceeds the filesize limit.
+    /// </summary>
+    public class CloudAppUploadSizeLimitExceededException : Exception
+    {
+        public CloudAppUploadSizeLimitExceededException() { }
     }
 }

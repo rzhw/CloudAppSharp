@@ -20,6 +20,7 @@
 
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Net;
 
 namespace CloudAppSharp
@@ -34,6 +35,12 @@ namespace CloudAppSharp
         public CloudAppItem Upload(string fileName)
         {
             CloudAppNewItem newItem = this.GetObject<CloudAppNewItem>(new Uri("http://my.cl.ly/items/new"));
+
+            if (newItem.Params == null)
+                throw new CloudAppUploadCountLimitExceededException();
+            else if (new FileInfo(fileName).Length > newItem.MaximumUploadSize)
+                throw new CloudAppUploadSizeLimitExceededException();
+
             HttpWebResponse uploadResponse = (HttpWebResponse)SalientUpload.PostFile(new Uri(newItem.Url), newItem.Params, fileName, "file", null, null, false);
 
             if (uploadResponse.StatusCode == HttpStatusCode.SeeOther)
@@ -66,6 +73,20 @@ namespace CloudAppSharp
             bw.RunWorkerCompleted += (sender, e) =>
             {
                 CloudAppNewItem newItem = (CloudAppNewItem)e.Result;
+
+                if (newItem.Params == null)
+                {
+                    UploadAsyncCompleted(this, new CloudAppUploadCompletedEventArgs(
+                        new CloudAppUploadCountLimitExceededException()));
+                    return;
+                }
+                else if (new FileInfo(fileName).Length > newItem.MaximumUploadSize)
+                {
+                    UploadAsyncCompleted(this, new CloudAppUploadCompletedEventArgs(
+                        new CloudAppUploadSizeLimitExceededException()));
+                    return;
+                }
+
                 SalientUploadAsync uploader;
 
                 try
