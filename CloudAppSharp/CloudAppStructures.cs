@@ -149,10 +149,10 @@ namespace CloudAppSharp
     [DataContract]
     public class CloudAppNewItem : CloudAppJsonBase
     {
-        [DataMember(Name = "max_upload_size", IsRequired = true)]
+        [DataMember(Name = "max_upload_size")]
         public int MaximumUploadSize { get; set; }
 
-        [DataMember(Name = "uploads_remaining", IsRequired = true)]
+        [DataMember(Name = "uploads_remaining")]
         public int UploadsRemaining { get; set; }
 
         [DataMember(Name = "url", IsRequired = true)]
