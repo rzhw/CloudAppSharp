@@ -42,7 +42,7 @@ namespace CloudAppSharp
     public class CloudAppAccountDetails : CloudAppJsonBase
     {
         [DataMember(Name = "id")]
-        public int Id { get; set; }
+        public int ID { get; set; }
 
         [DataMember(Name = "email")]
         public string Email { get; set; }
