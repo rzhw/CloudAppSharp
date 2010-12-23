@@ -34,7 +34,7 @@ namespace CloudAppSharp
     {
         private DigestCredentials _credentials = null;
         private CookieContainer _cookies = new CookieContainer();
-        public CloudAppAccountDetails AccountDetails { get; private set; }
+        public CloudAppUser AccountDetails { get; private set; }
 
         public static IWebProxy Proxy { get; set; }
 
@@ -82,7 +82,7 @@ namespace CloudAppSharp
             }
 
             // No problems? Let's store our stuff, then.
-            AccountDetails = JsonHelper.Deserialize<CloudAppAccountDetails>(response);
+            AccountDetails = JsonHelper.Deserialize<CloudAppUser>(response);
             _credentials = (DigestCredentials)wr.Credentials;
             _cookies = wr.CookieContainer;
         }

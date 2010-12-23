@@ -39,7 +39,7 @@ namespace CloudAppSharp
     public class CloudAppJsonBase { }
 
     [DataContract]
-    public class CloudAppAccountDetails : CloudAppJsonBase
+    public class CloudAppUser : CloudAppJsonBase
     {
         [DataMember(Name = "id")]
         public int ID { get; set; }
