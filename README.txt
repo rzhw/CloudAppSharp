@@ -1,4 +1,4 @@
-CloudAppSharp 1.0.2
+CloudAppSharp 1.4.0
 ===================
 
 http://github.com/a2h/CloudAppSharp
@@ -15,6 +15,40 @@ Instructions
 
 Changelog
 ---------
+
+1.3.1 to 1.4.0:
+
+* Added support for retrieving account details
+* Added support for grabbing the "standard URL" of an item, i.e. with cl.ly instead of a custom domain
+
+1.3.0 to 1.3.1:
+
+* Fixed crashing when the max upload size and/or uploads remaining params aren't received, which is the case for CloudApp Pro users
+
+1.2.1 to 1.3.0:
+
+* Added support for detecting whether the user is over any of the daily upload limits
+
+1.2.0 to 1.2.1:
+
+* Catch and pass on exceptions in CloudAppUploadCompletedEventArgs
+
+1.1.1 to 1.2.0:
+
+* Added custom exceptions CloudAppInvalidResponseException and CloudAppInvalidProtocolException
+
+1.1.0 to 1.1.1:
+
+* Pass blank strings instead of null on if a retrieved item's name is null - this fixes a crash
+
+1.0.3 to 1.1.0:
+
+* Added support for file privacy
+* Some major rewriting of how requests are made
+
+1.0.2 to 1.0.3:
+
+* Allow setting a proxy, and use the system proxy by default
 
 1.0.1 to 1.0.2:
 
