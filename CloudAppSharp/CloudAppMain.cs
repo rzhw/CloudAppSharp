@@ -32,8 +32,10 @@ namespace CloudAppSharp
     /// </summary>
     public partial class CloudApp
     {
-        private DigestCredentials credentials = null;
-        private CookieContainer cookies = new CookieContainer();
+        private DigestCredentials _credentials = null;
+        private CookieContainer _cookies = new CookieContainer();
+        public CloudAppAccountDetails AccountDetails { get; private set; }
+
         public static IWebProxy Proxy { get; set; }
 
         static CloudApp()
@@ -63,18 +65,20 @@ namespace CloudAppSharp
             // CloudApp seems to store emails in its database lowercased.
             email = email.ToLower();
 
-            // Two stones, one bird: Validate our credentials, AND get our cookies!
-            HttpWebRequest wr = CreateRequest("http://my.cl.ly/items/new", "GET");
+            // One stone, two birds: Get our account details AND our cookies!
+            HttpWebRequest wr = CreateRequest("http://my.cl.ly/account", "GET");
             wr.Credentials = new DigestCredentials(email, password, isHA1);
+            HttpWebResponse response = (HttpWebResponse)wr.GetResponse();
 
-            wr.GetResponse(); // Problem? It'll throw an exception.
-            credentials = (DigestCredentials)wr.Credentials;
-            cookies = wr.CookieContainer;
+            // No exceptions? Let's store our stuff, then.
+            AccountDetails = JsonHelper.Deserialize<CloudAppAccountDetails>(response);
+            _credentials = (DigestCredentials)wr.Credentials;
+            _cookies = wr.CookieContainer;
         }
 
         public DigestCredentials GetCredentials()
         {
-            return new DigestCredentials(credentials.Username, credentials.Ha1, true);
+            return new DigestCredentials(_credentials.Username, _credentials.Ha1, true);
         }
 
         /// <summary>
@@ -177,7 +181,7 @@ namespace CloudAppSharp
         internal HttpWebRequest CreateRequest(Uri requestUri, string method)
         {
             HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(requestUri);
-            wr.CookieContainer = this.cookies;
+            wr.CookieContainer = this._cookies;
             wr.Proxy = Proxy;
             wr.Method = method;
             wr.Accept = "application/json";

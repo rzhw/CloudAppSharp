@@ -39,6 +39,40 @@ namespace CloudAppSharp
     public class CloudAppJsonBase { }
 
     [DataContract]
+    public class CloudAppAccountDetails : CloudAppJsonBase
+    {
+        [DataMember(Name = "id")]
+        public int Id { get; set; }
+
+        [DataMember(Name = "email")]
+        public string Email { get; set; }
+
+        [DataMember(Name = "domain")]
+        public string Domain { get; set; }
+
+        [DataMember(Name = "domain_home_page")]
+        public string DomainHomePage { get; set; }
+
+        [DataMember(Name = "private_items")]
+        public bool PrivateItems { get; set; }
+
+        [DataMember(Name = "subscribed")]
+        public bool Subscribed { get; set; }
+
+        [DataMember(Name = "alpha")]
+        public bool Alpha { get; set; }
+
+        [DataMember(Name = "created_at")]
+        public string CreatedAt { get; set; }
+
+        [DataMember(Name = "updated_at")]
+        public string UpdatedAt { get; set; }
+
+        [DataMember(Name = "activated_at")]
+        public string ActivatedAt { get; set; }
+    }
+
+    [DataContract]
     public class CloudAppItem : CloudAppJsonBase
     {
         [DataMember(Name = "href")]
