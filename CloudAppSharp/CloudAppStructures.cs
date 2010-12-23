@@ -72,28 +72,6 @@ namespace CloudAppSharp
         [DataMember(Name = "activated_at")]
         public string ActivatedAt { get; set; }
     }
-
-    [DataContract]
-    internal class CloudAppChangeEmail : CloudAppJsonBase
-    {
-        public CloudAppChangeEmail() { }
-        public CloudAppChangeEmail(string newEmail, string currentPassword)
-        {
-            user = new CloudAppChangeEmailDetails { email = newEmail, current_password = currentPassword };
-        }
-
-        [DataMember]
-        public CloudAppChangeEmailDetails user { get; set; }
-
-        [DataContract]
-        public class CloudAppChangeEmailDetails : CloudAppJsonBase
-        {
-            [DataMember]
-            public string email { get; set; }
-            [DataMember]
-            public string current_password { get; set; }
-        }
-    }
     #endregion
 
     #region Items
@@ -303,16 +281,17 @@ namespace CloudAppSharp
         public CloudAppItemRename() { }
         public CloudAppItemRename(string name)
         {
-            item = new CloudAppItemRenameDetails { name = name };
+            Item = new CloudAppItemRenameDetails { Name = name };
         }
 
-        public CloudAppItemRenameDetails item { get; set; }
+        [DataMember(Name = "item")]
+        public CloudAppItemRenameDetails Item { get; set; }
 
         [DataContract]
         public class CloudAppItemRenameDetails : CloudAppJsonBase
         {
-            [DataMember]
-            public string name { get; set; }
+            [DataMember(Name = "name")]
+            public string Name { get; set; }
         }
     }
     #endregion
