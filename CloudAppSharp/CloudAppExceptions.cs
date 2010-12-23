@@ -6,6 +6,17 @@ using System.Text;
 namespace CloudAppSharp
 {
     /// <summary>
+    /// The exception that is thrown when invalid credentials are provided to the CloudApp service.
+    /// </summary>
+    public class CloudAppInvalidCredentialsException : Exception
+    {
+        public CloudAppInvalidCredentialsException(WebException webException)
+            : base("Invalid credentials.", webException)
+        {
+        }
+    }
+
+    /// <summary>
     /// The exception that is thrown when an invalid or unexpected response is received from the CloudApp service.
     /// </summary>
     public class CloudAppInvalidResponseException : WebException

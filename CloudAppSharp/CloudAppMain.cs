@@ -68,9 +68,20 @@ namespace CloudAppSharp
             // One stone, two birds: Get our account details AND our cookies!
             HttpWebRequest wr = CreateRequest("http://my.cl.ly/account", "GET");
             wr.Credentials = new DigestCredentials(email, password, isHA1);
-            HttpWebResponse response = (HttpWebResponse)wr.GetResponse();
+            HttpWebResponse response;
+            try
+            {
+                response = (HttpWebResponse)wr.GetResponse();
+            }
+            catch (WebException e)
+            {
+                if (((HttpWebResponse)e.Response).StatusCode == HttpStatusCode.Unauthorized)
+                    throw new CloudAppInvalidCredentialsException(e);
+                else
+                    throw e;
+            }
 
-            // No exceptions? Let's store our stuff, then.
+            // No problems? Let's store our stuff, then.
             AccountDetails = JsonHelper.Deserialize<CloudAppAccountDetails>(response);
             _credentials = (DigestCredentials)wr.Credentials;
             _cookies = wr.CookieContainer;
