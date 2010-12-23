@@ -244,21 +244,11 @@ namespace CloudAppSharp
 
         public CloudAppNewBookmark(string name, string redirectUrl)
         {
-            Item = new CloudAppNewBookmarkDetails { Name = name, RedirectUrl = redirectUrl };
+            Item = new CloudAppItem { Name = name, RedirectUrl = redirectUrl };
         }
 
         [DataMember(Name = "item")]
-        public CloudAppNewBookmarkDetails Item { get; set; }
-        
-        [DataContract]
-        public class CloudAppNewBookmarkDetails : CloudAppJsonBase
-        {
-            [DataMember(Name = "name")]
-            public string Name { get; set; }
-
-            [DataMember(Name = "redirect_url")]
-            public string RedirectUrl { get; set; }
-        }
+        public CloudAppItem Item { get; set; }
     }
 
     [DataContract]
@@ -268,11 +258,11 @@ namespace CloudAppSharp
 
         public CloudAppItemSecurity(bool setPrivate)
         {
-            Item = new CloudAppItemSecurityDetails { Private = setPrivate };
+            Item = new CloudAppItem { Private = setPrivate };
         }
 
         [DataMember(Name = "item")]
-        public CloudAppItemSecurityDetails Item { get; set; }
+        public CloudAppItem Item { get; set; }
 
         [DataContract]
         public class CloudAppItemSecurityDetails : CloudAppJsonBase
