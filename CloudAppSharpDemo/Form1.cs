@@ -11,37 +11,40 @@ namespace CloudAppSharpDemo
 {
     public partial class Form1 : Form
     {
-        private bool cloudAppLogged = false;
-        public CloudApp cloudApp;
+        private bool _cloudAppLogged = false;
+        public CloudApp _cloudApp;
 
         public Form1()
         {
             Font = SystemFonts.MessageBoxFont;
             AutoScaleMode = AutoScaleMode.Font;
             InitializeComponent();
+            labelStatus.Location = new Point(pictureBoxLogo.Location.X + pictureBoxLogo.Image.Width + 6,
+                labelStatus.Location.Y);
             labelDetailsName.Location = new Point(28, 21);
         }
 
         private void buttonLogin_Click(object sender, EventArgs e)
         {
-            if (!cloudAppLogged)
+            if (!_cloudAppLogged)
             {
-                cloudApp = new CloudApp(textBoxEmail.Text, textBoxPassword.Text);
-                cloudAppLogged = true;
+                _cloudApp = new CloudApp(textBoxEmail.Text, textBoxPassword.Text);
+                _cloudAppLogged = true;
                 textBoxEmail.Enabled = false;
                 textBoxPassword.Enabled = false;
                 groupBoxAddBookmark.Enabled = true;
                 groupBoxUploadFile.Enabled = true;
                 groupBoxUploads.Enabled = true;
                 buttonLogin.Text = "Logout";
-                DigestCredentials digestCredentials = cloudApp.GetCredentials();
-                labelStatus.Text = String.Format("Logged in as {0} with hash {1}",
+                DigestCredentials digestCredentials = _cloudApp.GetCredentials();
+                labelStatus.Text = String.Format("Logged in: {0}, hash {1}",
                     digestCredentials.Username, digestCredentials.Ha1);
+                buttonAccountDetails.Enabled = true;
             }
             else
             {
-                cloudApp = null;
-                cloudAppLogged = false;
+                _cloudApp = null;
+                _cloudAppLogged = false;
                 textBoxEmail.Enabled = true;
                 textBoxPassword.Enabled = true;
                 groupBoxAddBookmark.Enabled = false;
@@ -49,12 +52,34 @@ namespace CloudAppSharpDemo
                 groupBoxUploads.Enabled = false;
                 buttonLogin.Text = "Login";
                 labelStatus.Text = "Not logged in";
+                buttonAccountDetails.Enabled = false;
             }
+        }
+
+        private void buttonAccountDetails_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(
+                String.Format("ID: {0}\nEmail: {1}\nDomain: {2}\nDomain home page: {3}\n"
+                    + "Item default privacy: {4}\nSubscribed: {5}\nAlpha user: {6}\n"
+                    + "Account creation date: {7}\nAccount updated date: {8}\nAccount activated date: {9}",
+                    _cloudApp.AccountDetails.ID,
+                    _cloudApp.AccountDetails.Email,
+                    _cloudApp.AccountDetails.Domain,
+                    _cloudApp.AccountDetails.DomainHomePage,
+                    _cloudApp.AccountDetails.PrivateItems,
+                    _cloudApp.AccountDetails.Subscribed,
+                    _cloudApp.AccountDetails.Alpha,
+                    _cloudApp.AccountDetails.CreatedAt,
+                    _cloudApp.AccountDetails.UpdatedAt,
+                    _cloudApp.AccountDetails.ActivatedAt),
+                "CloudAppSharp Demo",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
         }
 
         private void buttonAddBookmark_Click(object sender, EventArgs e)
         {
-            CloudAppItem bookmark = cloudApp.AddBookmark(new Uri(textBoxAddBookmark.Text));
+            CloudAppItem bookmark = _cloudApp.AddBookmark(new Uri(textBoxAddBookmark.Text));
             UpdateDetailsArea(bookmark);
         }
 
@@ -75,7 +100,7 @@ namespace CloudAppSharpDemo
 
             if (File.Exists(filePath))
             {
-                uploadedItem = cloudApp.Upload(textBoxUploadFile.Text);
+                uploadedItem = _cloudApp.Upload(textBoxUploadFile.Text);
                 UpdateDetailsArea(uploadedItem);
             }
             else
@@ -88,7 +113,7 @@ namespace CloudAppSharpDemo
         {
             listViewUploads.Items.Clear();
 
-            List<CloudAppItem> items = cloudApp.GetItems();
+            List<CloudAppItem> items = _cloudApp.GetItems();
 
             foreach (CloudAppItem item in items)
             {
@@ -96,16 +121,16 @@ namespace CloudAppSharpDemo
             }
         }
 
-        private void FillListItem(ListViewItem listViewItem, CloudAppItem cloudAppItem)
+        private void FillListItem(ListViewItem listViewItem, CloudAppItem _cloudAppItem)
         {
             listViewItem.SubItems.Clear();
-            listViewItem.Tag = cloudAppItem;
-            listViewItem.Text = cloudAppItem.Name;
+            listViewItem.Tag = _cloudAppItem;
+            listViewItem.Text = _cloudAppItem.Name;
             listViewItem.SubItems.Add(""); // icon
-            listViewItem.SubItems.Add(cloudAppItem.ViewCounter.ToString());
-            listViewItem.SubItems.Add(cloudAppItem.Private ? "N" : "Y");
-            listViewItem.SubItems.Add(cloudAppItem.CreatedAt);
-            listViewItem.SubItems.Add(cloudAppItem.UpdatedAt);
+            listViewItem.SubItems.Add(_cloudAppItem.ViewCounter.ToString());
+            listViewItem.SubItems.Add(_cloudAppItem.Private ? "N" : "Y");
+            listViewItem.SubItems.Add(_cloudAppItem.CreatedAt);
+            listViewItem.SubItems.Add(_cloudAppItem.UpdatedAt);
         }
 
         private void listViewUploads_SelectedIndexChanged(object sender, EventArgs e)
@@ -122,7 +147,7 @@ namespace CloudAppSharpDemo
             if (MessageBox.Show("Do you want to make this item " + (item.Private ? "public" : "private") + "?",
                 "CloudAppSharp Demo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
             {
-                CloudAppItem itemNew = cloudApp.SetPrivacy(item, !item.Private);
+                CloudAppItem itemNew = _cloudApp.SetPrivacy(item, !item.Private);
                 FillListItem(listViewUploads.FocusedItem, itemNew);
             }
         }
@@ -144,7 +169,7 @@ namespace CloudAppSharpDemo
             if (MessageBox.Show("Are you sure you want to delete " + item.Name + "?",
                 "CloudAppSharp Demo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
             {
-                cloudApp.DeleteItem(item);
+                _cloudApp.DeleteItem(item);
                 buttonUploadsRefresh.PerformClick();
             }
         }

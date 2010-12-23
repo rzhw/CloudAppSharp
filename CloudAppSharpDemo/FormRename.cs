@@ -24,7 +24,7 @@ namespace CloudAppSharpDemo
 
         private void button1_Click(object sender, EventArgs e)
         {
-            _caller._tempItem = _caller.cloudApp.RenameItem(_item, textBox1.Text);
+            _caller._tempItem = _caller._cloudApp.RenameItem(_item, textBox1.Text);
             Close();
         }
 

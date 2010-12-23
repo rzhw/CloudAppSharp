@@ -59,18 +59,19 @@
             this.groupBoxDetailsFromUrl = new System.Windows.Forms.GroupBox();
             this.buttonDetailsFromUrl = new System.Windows.Forms.Button();
             this.textBoxDetailsFromUrl = new System.Windows.Forms.TextBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.groupBoxAddBookmark = new System.Windows.Forms.GroupBox();
             this.buttonAddBookmark = new System.Windows.Forms.Button();
             this.textBoxAddBookmark = new System.Windows.Forms.TextBox();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.buttonAccountDetails = new System.Windows.Forms.Button();
             this.groupBoxCredentials.SuspendLayout();
             this.groupBoxUploads.SuspendLayout();
             this.groupBoxUploadFile.SuspendLayout();
             this.groupDetails.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDetails)).BeginInit();
             this.groupBoxDetailsFromUrl.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.groupBoxAddBookmark.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -405,14 +406,14 @@
             this.textBoxDetailsFromUrl.TabIndex = 0;
             this.textBoxDetailsFromUrl.Text = "http://cl.ly/itemurl";
             // 
-            // pictureBox1
+            // pictureBoxLogo
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(207, 30);
-            this.pictureBox1.TabIndex = 5;
-            this.pictureBox1.TabStop = false;
+            this.pictureBoxLogo.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxLogo.Image")));
+            this.pictureBoxLogo.Location = new System.Drawing.Point(12, 12);
+            this.pictureBoxLogo.Name = "pictureBoxLogo";
+            this.pictureBoxLogo.Size = new System.Drawing.Size(207, 30);
+            this.pictureBoxLogo.TabIndex = 5;
+            this.pictureBoxLogo.TabStop = false;
             // 
             // groupBoxAddBookmark
             // 
@@ -447,11 +448,23 @@
             // labelStatus
             // 
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(224, 20);
+            this.labelStatus.Location = new System.Drawing.Point(225, 19);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(70, 13);
             this.labelStatus.TabIndex = 7;
             this.labelStatus.Text = "Not logged in";
+            // 
+            // buttonAccountDetails
+            // 
+            this.buttonAccountDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAccountDetails.Enabled = false;
+            this.buttonAccountDetails.Location = new System.Drawing.Point(529, 15);
+            this.buttonAccountDetails.Name = "buttonAccountDetails";
+            this.buttonAccountDetails.Size = new System.Drawing.Size(75, 23);
+            this.buttonAccountDetails.TabIndex = 8;
+            this.buttonAccountDetails.Text = "Details...";
+            this.buttonAccountDetails.UseVisualStyleBackColor = true;
+            this.buttonAccountDetails.Click += new System.EventHandler(this.buttonAccountDetails_Click);
             // 
             // Form1
             // 
@@ -459,9 +472,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(624, 612);
+            this.Controls.Add(this.buttonAccountDetails);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.groupBoxAddBookmark);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.pictureBoxLogo);
             this.Controls.Add(this.groupBoxDetailsFromUrl);
             this.Controls.Add(this.groupDetails);
             this.Controls.Add(this.groupBoxUploadFile);
@@ -479,7 +493,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDetails)).EndInit();
             this.groupBoxDetailsFromUrl.ResumeLayout(false);
             this.groupBoxDetailsFromUrl.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
             this.groupBoxAddBookmark.ResumeLayout(false);
             this.groupBoxAddBookmark.PerformLayout();
             this.ResumeLayout(false);
@@ -515,7 +529,7 @@
         private System.Windows.Forms.GroupBox groupBoxDetailsFromUrl;
         private System.Windows.Forms.TextBox textBoxDetailsFromUrl;
         private System.Windows.Forms.Button buttonDetailsFromUrl;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBoxLogo;
         private System.Windows.Forms.GroupBox groupBoxAddBookmark;
         private System.Windows.Forms.TextBox textBoxAddBookmark;
         private System.Windows.Forms.Button buttonAddBookmark;
@@ -524,6 +538,7 @@
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.ColumnHeader columnHeaderPublic;
         private System.Windows.Forms.Button buttonUploadsRename;
+        private System.Windows.Forms.Button buttonAccountDetails;
     }
 }
 
