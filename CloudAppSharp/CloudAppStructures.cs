@@ -38,6 +38,7 @@ namespace CloudAppSharp
     [DataContract]
     public class CloudAppJsonBase { }
 
+    #region Account
     [DataContract]
     public class CloudAppUser : CloudAppJsonBase
     {
@@ -72,6 +73,30 @@ namespace CloudAppSharp
         public string ActivatedAt { get; set; }
     }
 
+    [DataContract]
+    internal class CloudAppChangeEmail : CloudAppJsonBase
+    {
+        public CloudAppChangeEmail() { }
+        public CloudAppChangeEmail(string newEmail, string currentPassword)
+        {
+            user = new CloudAppChangeEmailDetails { email = newEmail, current_password = currentPassword };
+        }
+
+        [DataMember]
+        public CloudAppChangeEmailDetails user { get; set; }
+
+        [DataContract]
+        public class CloudAppChangeEmailDetails : CloudAppJsonBase
+        {
+            [DataMember]
+            public string email { get; set; }
+            [DataMember]
+            public string current_password { get; set; }
+        }
+    }
+    #endregion
+
+    #region Items
     [DataContract]
     public class CloudAppItem : CloudAppJsonBase
     {
@@ -181,7 +206,7 @@ namespace CloudAppSharp
     }
 
     [DataContract]
-    public class CloudAppNewItem : CloudAppJsonBase
+    internal class CloudAppNewItem : CloudAppJsonBase
     {
         [DataMember(Name = "max_upload_size")]
         public int MaximumUploadSize { get; set; }
@@ -238,31 +263,31 @@ namespace CloudAppSharp
     }
 
     [DataContract]
-    public class CloudAppNewBookmark : CloudAppJsonBase
+    internal class CloudAppNewBookmark : CloudAppJsonBase
     {
         public CloudAppNewBookmark() { }
 
         public CloudAppNewBookmark(string name, string redirectUrl)
         {
-            Item = new CloudAppItem { Name = name, RedirectUrl = redirectUrl };
+            item = new CloudAppItem { Name = name, RedirectUrl = redirectUrl };
         }
 
-        [DataMember(Name = "item")]
-        public CloudAppItem Item { get; set; }
+        [DataMember]
+        public CloudAppItem item { get; set; }
     }
 
     [DataContract]
-    public class CloudAppItemSecurity : CloudAppJsonBase
+    internal class CloudAppItemSecurity : CloudAppJsonBase
     {
         public CloudAppItemSecurity() { }
 
         public CloudAppItemSecurity(bool setPrivate)
         {
-            Item = new CloudAppItem { Private = setPrivate };
+            item = new CloudAppItemSecurityDetails { Private = setPrivate };
         }
 
-        [DataMember(Name = "item")]
-        public CloudAppItem Item { get; set; }
+        [DataMember]
+        public CloudAppItemSecurityDetails item { get; set; }
 
         [DataContract]
         public class CloudAppItemSecurityDetails : CloudAppJsonBase
@@ -273,23 +298,22 @@ namespace CloudAppSharp
     }
 
     [DataContract]
-    public class CloudAppItemRename : CloudAppJsonBase
+    internal class CloudAppItemRename : CloudAppJsonBase
     {
         public CloudAppItemRename() { }
-
         public CloudAppItemRename(string name)
         {
-            Item = new CloudAppItemRenameDetails { Name = name };
+            item = new CloudAppItemRenameDetails { name = name };
         }
 
-        [DataMember(Name = "item")]
-        public CloudAppItemRenameDetails Item { get; set; }
+        public CloudAppItemRenameDetails item { get; set; }
 
         [DataContract]
         public class CloudAppItemRenameDetails : CloudAppJsonBase
         {
-            [DataMember(Name = "name")]
-            public string Name { get; set; }
+            [DataMember]
+            public string name { get; set; }
         }
     }
+    #endregion
 }
