@@ -72,6 +72,50 @@ namespace CloudAppSharp
         [DataMember(Name = "activated_at")]
         public string ActivatedAt { get; set; }
     }
+
+    [DataContract]
+    internal class CloudAppChangeEmail : CloudAppJsonBase
+    {
+        public CloudAppChangeEmail() { }
+        public CloudAppChangeEmail(string newEmail, string currentPassword)
+        {
+            user = new CloudAppChangeEmailDetails { email = newEmail, current_password = currentPassword };
+        }
+
+        [DataMember]
+        public CloudAppChangeEmailDetails user { get; set; }
+
+        [DataContract]
+        public class CloudAppChangeEmailDetails : CloudAppJsonBase
+        {
+            [DataMember]
+            public string email { get; set; }
+            [DataMember]
+            public string current_password { get; set; }
+        }
+    }
+
+    [DataContract]
+    internal class CloudAppChangePassword : CloudAppJsonBase
+    {
+        public CloudAppChangePassword() { }
+        public CloudAppChangePassword(string newPassword, string currentPassword)
+        {
+            user = new CloudAppChangePasswordDetails { password = newPassword, current_password = currentPassword };
+        }
+
+        [DataMember]
+        public CloudAppChangePasswordDetails user { get; set; }
+
+        [DataContract]
+        public class CloudAppChangePasswordDetails : CloudAppJsonBase
+        {
+            [DataMember]
+            public string password { get; set; }
+            [DataMember]
+            public string current_password { get; set; }
+        }
+    }
     #endregion
 
     #region Items
@@ -116,6 +160,14 @@ namespace CloudAppSharp
 
         [DataMember(Name = "url")]
         public string Url { get; set; }
+
+        public string StandardUrl
+        {
+            get
+            {
+                return Url.Replace(new Uri(Url).Host, "cl.ly");
+            }
+        }
 
         [DataMember(Name = "content_url")]
         public string ContentUrl { get; set; }

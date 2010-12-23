@@ -192,8 +192,13 @@ namespace CloudAppSharpDemo
             labelDetailsName.Text = String.Format("{0} ({1}, {2} views, {3})",
                 item.Name, item.ItemType, item.ViewCounter, item.Private ? "Private" : "Public");
 
-            textBoxDetails.Text = String.Format("URL: {0}\r\nHref: {1}\r\n{2}\r\nCreated: {3}\r\nUpdated: {4}\r\nDeleted: {5}",
-                item.Url,
+            bool hasCustomDomain = !String.IsNullOrEmpty(_cloudApp.AccountDetails.Domain);
+
+            textBoxDetails.Text = String.Format(
+                "URL: {0}\r\nContent URL: {1}\r\nHref: {2}\r\n{3}"
+                    + "\r\nCreated: {4}\r\nUpdated: {5}\r\nDeleted: {6}",
+                item.Url + (hasCustomDomain ? " (" + item.StandardUrl + ")" : ""),
+                item.ContentUrl,
                 item.Href,
                 item.ItemType == CloudAppItemType.Bookmark ? "Redirect URL: " + item.RedirectUrl : "Remote URL: " + item.RemoteUrl,
                 item.CreatedAt,
