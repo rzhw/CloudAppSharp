@@ -75,7 +75,9 @@ namespace CloudAppSharp
             }
             catch (WebException e)
             {
-                if (((HttpWebResponse)e.Response).StatusCode == HttpStatusCode.Unauthorized)
+                if (e.Response == null)
+                    throw e;
+                else if (((HttpWebResponse)e.Response).StatusCode == HttpStatusCode.Unauthorized)
                     throw new CloudAppInvalidCredentialsException(e);
                 else
                     throw e;
