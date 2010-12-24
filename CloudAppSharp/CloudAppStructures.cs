@@ -54,14 +54,29 @@ namespace CloudAppSharp
         [DataMember(Name = "domain_home_page")]
         public string DomainHomePage { get; set; }
 
-        [DataMember(Name = "private_items")]
-        public bool PrivateItems { get; set; }
+        [DataMember]
+        private bool? private_items { get; set; } // In case we get null
+        public bool PrivateItems
+        {
+            get { return private_items == true; }
+            set { private_items = value; }
+        }
 
-        [DataMember(Name = "subscribed")]
-        public bool Subscribed { get; set; }
+        [DataMember]
+        private bool? subscribed { get; set; } // In case we get null
+        public bool Subscribed
+        {
+            get { return subscribed == true; }
+            set { subscribed = value; }
+        }
 
-        [DataMember(Name = "alpha")]
-        public bool Alpha { get; set; }
+        [DataMember]
+        private bool? alpha { get; set; } // In case we get null
+        public bool Alpha
+        {
+            get { return alpha == true; }
+            set { alpha = value; }
+        }
 
         [DataMember(Name = "created_at")]
         public string CreatedAt { get; set; }
