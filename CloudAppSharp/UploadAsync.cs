@@ -4,10 +4,11 @@
  * The original class was been licensed by its author under
  * The Code Project Open License (CPOL)
  *
- * Modified by a2h to allow disabling of automatic redirection (31/07/2010)
- * Modified by a2h to support asynchronous uploading (13/08/2010)
- * Modified by a2h to remove MIME detection (14/09/2010)
- * Modified by a2h to add proxy support (23/10/2010)
+ * Modified by Richard Wang to allow disabling of automatic redirection (31/07/2010)
+ * Modified by Richard Wang to support asynchronous uploading (13/08/2010)
+ * Modified by Richard Wang to remove MIME detection (14/09/2010)
+ * Modified by Richard Wang to add proxy support (23/10/2010)
+ * Modified by Richard Wang to add support for cancellation (29/12/2010)
  */
 
 using System;
@@ -173,9 +174,17 @@ namespace CloudAppSharp
                     int i = 0;
                     while ((bytesRead = fileData.Read(buffer, 0, buffer.Length)) != 0)
                     {
-                        worker.ReportProgress(Math.Min(100, (int)(((double)(bytesRead * i) / (double)fileData.Length) * (double)100)));
-                        requestStream.Write(buffer, 0, bytesRead);
-                        i++;
+                        if (worker.CancellationPending)
+                        {
+                            e.Cancel = true;
+                            return;
+                        }
+                        else
+                        {
+                            worker.ReportProgress(Math.Min(100, (int)(((double)(bytesRead * i) / (double)fileData.Length) * (double)100)));
+                            requestStream.Write(buffer, 0, bytesRead);
+                            i++;
+                        }
                     }
                 }
 

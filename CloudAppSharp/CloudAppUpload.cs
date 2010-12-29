@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
@@ -52,102 +53,140 @@ namespace CloudAppSharp
                 throw new CloudAppInvalidProtocolException(HttpStatusCode.SeeOther, uploadResponse);
             }
         }
-
-        public event CloudAppUploadProgressChangedEventHandler UploadAsyncProgressChanged;
-        public event CloudAppUploadCompletedEventHandler UploadAsyncCompleted;
-
-        /// <summary>
-        /// Uploads the specified local file to CloudApp asynchronously. Requires authentication.
-        /// </summary>
-        /// <param name="fileName">The file to send to CloudApp.</param>
-        /// <returns></returns>
-        public void UploadAsync(string fileName)
-        {
-            BackgroundWorker bw = new BackgroundWorker();
-
-            bw.DoWork += (sender, e) =>
-            {
-                e.Result = this.GetObject<CloudAppNewItem>(new Uri("http://my.cl.ly/items/new"));
-            };
-
-            bw.RunWorkerCompleted += (sender, e) =>
-            {
-                CloudAppNewItem newItem = (CloudAppNewItem)e.Result;
-
-                if (newItem.Params == null)
-                {
-                    UploadAsyncCompleted(this, new CloudAppUploadCompletedEventArgs(
-                        new CloudAppUploadCountLimitExceededException()));
-                    return;
-                }
-                else if (newItem.MaximumUploadSize > 0 && new FileInfo(fileName).Length > newItem.MaximumUploadSize)
-                {
-                    UploadAsyncCompleted(this, new CloudAppUploadCompletedEventArgs(
-                        new CloudAppUploadSizeLimitExceededException()));
-                    return;
-                }
-
-                SalientUploadAsync uploader;
-
-                try
-                {
-                    uploader = new SalientUploadAsync(new Uri(newItem.Url), newItem.Params, fileName, "file", null, null, false);
-                }
-                catch (Exception ex)
-                {
-                    UploadAsyncCompleted(this, new CloudAppUploadCompletedEventArgs(ex));
-                    return;
-                }
-
-                BackgroundWorker bw2 = new BackgroundWorker();
-                bw2.WorkerReportsProgress = true;
-                bw2.DoWork += new DoWorkEventHandler(uploader.DoWork);
-
-                if (UploadAsyncProgressChanged != null)
-                {
-                    bw2.ProgressChanged += (sender2, e2) =>
-                    {
-                        UploadAsyncProgressChanged(this, new CloudAppUploadProgressChangedEventArgs(e2.ProgressPercentage));
-                    };
-                }
-
-                bw2.RunWorkerCompleted += new RunWorkerCompletedEventHandler((sender2, e2) =>
-                    {
-                        uploader.Dispose();
-
-                        HttpWebResponse uploadResponse = (HttpWebResponse)e2.Result;
-
-                        if (uploadResponse.StatusCode == HttpStatusCode.SeeOther)
-                        {
-                            if (UploadAsyncCompleted != null)
-                            {
-                                BackgroundWorker bw3 = new BackgroundWorker();
-                                bw3.DoWork += (sender3, e3) =>
-                                {
-                                    e3.Result = GetObject<CloudAppItem>(new Uri(uploadResponse.Headers["Location"]));
-                                };
-                                bw3.RunWorkerCompleted += (sender3, e3) =>
-                                {
-                                    UploadAsyncCompleted(this, new CloudAppUploadCompletedEventArgs((CloudAppItem)e3.Result));
-                                };
-                                bw3.RunWorkerAsync();
-                            }
-                        }
-                        else
-                        {
-                            UploadAsyncCompleted(this, new CloudAppUploadCompletedEventArgs(
-                                new CloudAppInvalidProtocolException(HttpStatusCode.SeeOther, uploadResponse)));
-                        }
-                    });
-
-                bw2.RunWorkerAsync();
-            };
-
-            bw.RunWorkerAsync();
-        }
     }
 
-    // TODO: Add support for cancelling the upload and checking whether it has been cancelled.
+    public class CloudAppAsyncUploader
+    {
+        private string _fileName;
+        private CloudApp _cloudApp;
+        internal BackgroundWorker Worker { get; set; }
+        public bool IsCancelled { get; private set; }
+        public bool IsCompleted { get; private set; }
+        public bool IsBusy { get; private set; }
+
+        public event CloudAppUploadProgressChangedEventHandler ProgressChanged;
+        public event CloudAppUploadCompletedEventHandler Completed;
+        public event EventHandler Ready;
+
+        public CloudAppAsyncUploader(CloudApp cloudApp, string fileName)
+        {
+            if (!File.Exists(fileName))
+                throw new FileNotFoundException();
+
+            Worker = new BackgroundWorker();
+            Worker.WorkerReportsProgress = true;
+            Worker.WorkerSupportsCancellation = true;
+
+            _fileName = fileName;
+            _cloudApp = cloudApp;
+
+            BackgroundWorker bw = new BackgroundWorker();
+            bw.DoWork += (sender, e) => e.Result = _cloudApp.GetObject<CloudAppNewItem>(new Uri("http://my.cl.ly/items/new"));
+            bw.RunWorkerCompleted += (sender, e) => PrepareUpload((CloudAppNewItem)e.Result);
+            bw.RunWorkerAsync();
+        }
+
+        private void PrepareUpload(CloudAppNewItem newItem)
+        {
+            if (newItem.Params == null)
+            {
+                IsCancelled = true;
+                if (Completed != null)
+                    Completed(this, new CloudAppUploadCompletedEventArgs(new CloudAppUploadCountLimitExceededException(), true));
+                return;
+            }
+            else if (newItem.MaximumUploadSize > 0 && new FileInfo(_fileName).Length > newItem.MaximumUploadSize)
+            {
+                IsCancelled = true;
+                if (Completed != null)
+                    Completed(this, new CloudAppUploadCompletedEventArgs(new CloudAppUploadSizeLimitExceededException(), true));
+                return;
+            }
+
+            // Try and create our uploader
+            SalientUploadAsync uploader;
+            try
+            {
+                uploader = new SalientUploadAsync(new Uri(newItem.Url), newItem.Params, _fileName, "file", null, null, false);
+            }
+            catch (Exception e)
+            {
+                IsCancelled = true;
+                if (Completed != null)
+                    Completed(this, new CloudAppUploadCompletedEventArgs(e, true));
+                return;
+            }
+
+            // If we got it, then attach our worker to its task.
+            Worker.DoWork += uploader.DoWork;
+
+            // For updating upload progress
+            Worker.ProgressChanged += (sender, e) =>
+            {
+                if (ProgressChanged != null)
+                    ProgressChanged(this, new CloudAppUploadProgressChangedEventArgs(e.ProgressPercentage));
+            };
+
+            // When we're done...
+            Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((sender, e) =>
+            {
+                IsCompleted = true;
+                uploader.Dispose();
+
+                if (e.Cancelled)
+                {
+                    if (Completed != null)
+                    {
+                        CloudAppUploadCompletedEventArgs e2 = new CloudAppUploadCompletedEventArgs();
+                        e2.Cancelled = true;
+                        Completed(this, e2);
+                    }
+                }
+                else
+                {
+                    HttpWebResponse uploadResponse = (HttpWebResponse)e.Result;
+
+                    if (uploadResponse.StatusCode == HttpStatusCode.SeeOther)
+                    {
+                        if (Completed != null)
+                        {
+                            BackgroundWorker bw = new BackgroundWorker();
+                            bw.DoWork += (sender2, e2) =>
+                            {
+                                e2.Result = _cloudApp.GetObject<CloudAppItem>(new Uri(uploadResponse.Headers["Location"]));
+                            };
+                            bw.RunWorkerCompleted += (sender2, e2) =>
+                            {
+                                Completed(this, new CloudAppUploadCompletedEventArgs((CloudAppItem)e2.Result));
+                            };
+                            bw.RunWorkerAsync();
+                        }
+                    }
+                    else
+                    {
+                        if (Completed != null)
+                            Completed(this, new CloudAppUploadCompletedEventArgs(
+                                new CloudAppInvalidProtocolException(HttpStatusCode.SeeOther, uploadResponse), false));
+                    }
+                }
+            });
+
+            if (Ready != null)
+                Ready(this, new EventArgs());
+        }
+
+        public void Upload()
+        {
+            IsBusy = true;
+            Worker.RunWorkerAsync();
+        }
+
+        public void Cancel()
+        {
+            IsCancelled = true;
+            Worker.CancelAsync();
+        }
+    }
 
     public delegate void CloudAppUploadProgressChangedEventHandler(object sender, CloudAppUploadProgressChangedEventArgs e);
 
@@ -161,7 +200,7 @@ namespace CloudAppSharp
             ProgressPercentage = progressPercentage;
         }
 
-        public int ProgressPercentage { get; set; }
+        public int ProgressPercentage { get; internal set; }
     }
 
     public delegate void CloudAppUploadCompletedEventHandler(object sender, CloudAppUploadCompletedEventArgs e);
@@ -171,16 +210,22 @@ namespace CloudAppSharp
     /// </summary>
     public class CloudAppUploadCompletedEventArgs : EventArgs
     {
+        public CloudAppUploadCompletedEventArgs() { }
+
         public CloudAppUploadCompletedEventArgs(CloudAppItem uploadedItem)
         {
+            Cancelled = false;
             UploadedItem = uploadedItem;
         }
-        public CloudAppUploadCompletedEventArgs(Exception error)
+
+        public CloudAppUploadCompletedEventArgs(Exception error, bool uploadWasCancelled)
         {
+            Cancelled = uploadWasCancelled;
             Error = error;
         }
 
-        public CloudAppItem UploadedItem { get; set; }
-        public Exception Error { get; set; }
+        public CloudAppItem UploadedItem { get; internal set; }
+        public Exception Error { get; internal set; }
+        public bool Cancelled { get; internal set; }
     }
 }
