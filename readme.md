@@ -1,20 +1,30 @@
-CloudAppSharp 1.4.0
+CloudAppSharp 1.5.0
 ===================
+
+Copyright (c) Richard Wang 2010
 
 http://github.com/a2h/CloudAppSharp
 
 Introduction
 ------------
 
-It's a wrapper around the CloudApp API, in C# (not C Flat). This bad pun brought to you courtesy of a2h.
+It's a wrapper around the CloudApp API, written in C# (not C Flat). This bad pun brought to you courtesy of Richard!
 
-Instructions
-------------
+Anyway, this library was created by me primarily to split out the CloudApp code from [FluffyApp](http://fluffyapp.com), but it's been open sourced so you can use the CloudApp awesomeness in your own apps as well... or help fix stuff in FluffyApp :P
 
-**TODO**
+Anyway, I have a wiki set up on the GitHub page linked above, if you'd like to know how to use CloudAppSharp. It's a wiki, so if you'd like to help out with docs, go ahead!
 
 Changelog
 ---------
+
+1.4.1 to 1.5.0:
+
+* Split the async upload code to a new class CloudAppAsyncUploader (multiple asynchronous uploads theoretically are now implementable, but that hasn't been tested)
+* Added support for upload cancellation
+
+1.4.0 to 1.4.1:
+
+* Made the booleans for the CloudAppUser class nullable, so that an exception isn't thrown when a value isn't received
 
 1.3.1 to 1.4.0:
 
