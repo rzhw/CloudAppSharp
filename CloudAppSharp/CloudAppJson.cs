@@ -31,25 +31,7 @@ namespace CloudAppSharp
         {
             using (HttpWebResponse response = (HttpWebResponse)CreateRequest(uri, "GET").GetResponse())
             {
-                try
-                {
-                    return JsonHelper.Deserialize<T>(response);
-                }
-                catch (System.Runtime.Serialization.SerializationException e)
-                {
-                    // We should only be specific if it's a JSON structure that's part of CloudAppSharp.
-                    if (typeof(T).BaseType == typeof(CloudAppJsonBase))
-                    {
-                        throw new CloudAppInvalidResponseException(
-                            "Response received from CloudApp is either not valid JSON or is missing expected parameters."
-                                + " The service and/or its API may be down, or its API may be incompatible with this release of CloudAppSharp.",
-                            e, WebExceptionStatus.ReceiveFailure, response);
-                    }
-                    else
-                    {
-                        throw e;
-                    }
-                }
+                return JsonHelper.Deserialize<T>(response);
             }
         }
 

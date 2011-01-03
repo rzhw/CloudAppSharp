@@ -130,13 +130,9 @@ namespace CloudAppSharp
             HttpWebResponse response = (HttpWebResponse)wr.GetResponse();
 
             if (response.StatusCode != HttpStatusCode.OK)
-            {
                 throw new CloudAppInvalidProtocolException(HttpStatusCode.OK, response);
-            }
             else
-            {
                 return response;
-            }
         }
     }
 }
