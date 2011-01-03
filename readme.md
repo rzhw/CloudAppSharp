@@ -1,7 +1,7 @@
-CloudAppSharp 1.5.0
-===================
+CloudAppSharp Dev
+=================
 
-Copyright (c) Richard Wang 2010
+Copyright (c) Richard Z.H. Wang 2010-2011
 
 http://github.com/a2h/CloudAppSharp
 
