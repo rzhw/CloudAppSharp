@@ -34,7 +34,6 @@ namespace CloudAppSharp
     {
         private DigestCredentials _credentials = null;
         private CookieContainer _cookies = new CookieContainer();
-        public CloudAppUser AccountDetails { get; private set; }
 
         public static IWebProxy Proxy { get; set; }
 
