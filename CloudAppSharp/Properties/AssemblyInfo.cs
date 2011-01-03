@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("CloudAppSharp")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Richard Wang")]
+[assembly: AssemblyCompany("Richard Z.H. Wang")]
 [assembly: AssemblyProduct("CloudAppSharp")]
-[assembly: AssemblyCopyright("Copyright © Richard Wang 2010")]
+[assembly: AssemblyCopyright("Copyright © Richard Z.H. Wang 2010-2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

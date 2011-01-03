@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CloudAppExceptions.cs" />
+    <Compile Include="CloudAppItems.cs" />
     <Compile Include="CloudAppJson.cs" />
     <Compile Include="CloudAppUpload.cs" />
     <Compile Include="DigestAuth.cs" />

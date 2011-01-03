@@ -1,6 +1,6 @@
 ﻿/**
  * CloudAppSharp
- * Copyright (c) 2010 a2h <http://a2h.uni.cc/>
+ * Copyright (c) 2010-2011 Richard Z.H. Wang <http://rewrite.name/>
  *
  * This library is licened under The Code Project Open License (CPOL) 1.02
  * which can be found online at <http://www.codeproject.com/info/cpol10.aspx>
