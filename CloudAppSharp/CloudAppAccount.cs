@@ -59,7 +59,7 @@ namespace CloudAppSharp
             ChangeAccountDetail<CloudAppChangePassword>(new CloudAppChangePassword(newPassword, currentPassword));
         }
 
-        public void SetCustomDomain(string domain, string domainHomePage)
+        public bool SetCustomDomain(string domain, string domainHomePage)
         {
             try
             {
@@ -70,9 +70,13 @@ namespace CloudAppSharp
                 HttpWebResponse response = e.Response as HttpWebResponse;
                 if (response != null && (int)response.StatusCode == 422)
                 {
+                    if (AccountDetails.Alpha || AccountDetails.Subscribed)
+                        return false;
                     throw new CloudAppProNeededException("You need a CloudApp Pro account to set a custom domain.", e);
                 }
             }
+
+            return true;
         }
 
         private void ChangeAccountDetail<T>(T detailsObject)
