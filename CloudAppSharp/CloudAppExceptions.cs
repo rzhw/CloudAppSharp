@@ -40,6 +40,14 @@ namespace CloudAppSharp
     }
 
     /// <summary>
+    /// The exception that is thrown when an action fails due to it requiring a CloudApp Pro account.
+    /// </summary>
+    public class CloudAppProNeededException : Exception
+    {
+        public CloudAppProNeededException() { }
+    }
+
+    /// <summary>
     /// The exception that is thrown when the daily upload limit has been exceeded.
     /// </summary>
     public class CloudAppUploadCountLimitExceededException : Exception

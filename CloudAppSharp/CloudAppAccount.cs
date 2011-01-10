@@ -52,6 +52,22 @@ namespace CloudAppSharp
             ChangeAccountDetail<CloudAppChangePassword>(new CloudAppChangePassword(newPassword, currentPassword));
         }
 
+        public void SetCustomDomain(string domain, string domainHomePage)
+        {
+            try
+            {
+                ChangeAccountDetail<CloudAppSetCustomDomain>(new CloudAppSetCustomDomain(domain, domainHomePage));
+            }
+            catch (WebException e)
+            {
+                HttpWebResponse response = e.Response as HttpWebResponse;
+                if (response != null && (int)response.StatusCode == 422)
+                {
+                    throw new CloudAppProNeededException();
+                }
+            }
+        }
+
         private void ChangeAccountDetail<T>(T detailsObject)
         {
             HttpWebRequest wr = CreateRequest("http://my.cl.ly/account", "PUT",
@@ -194,6 +210,28 @@ namespace CloudAppSharp
             public string password { get; set; }
             [DataMember]
             public string current_password { get; set; }
+        }
+    }
+
+    [DataContract]
+    internal class CloudAppSetCustomDomain : CloudAppJsonBase
+    {
+        public CloudAppSetCustomDomain() { }
+        public CloudAppSetCustomDomain(string domain, string domainHomePage)
+        {
+            user = new CloudAppSetCustomDomainDetails { domain = domain, domain_home_page = domainHomePage };
+        }
+
+        [DataMember]
+        public CloudAppSetCustomDomainDetails user { get; set; }
+
+        [DataContract]
+        public class CloudAppSetCustomDomainDetails : CloudAppJsonBase
+        {
+            [DataMember]
+            public string domain { get; set; }
+            [DataMember]
+            public string domain_home_page { get; set; }
         }
     }
 }
