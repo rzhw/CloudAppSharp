@@ -34,22 +34,7 @@ namespace CloudAppSharpDemo
                 groupBoxUploadFile.Enabled = true;
                 groupBoxUploads.Enabled = true;
                 buttonLogin.Text = "Logout";
-                DigestCredentials digestCredentials = _cloudApp.GetCredentials();
-                textBoxAccountDetails.Text = String.Format("Logged in with HA1 hash {10}\r\n\r\n"
-                    + "ID: {0}\r\nEmail: {1}\r\nDomain: {2}\r\nDomain home page: {3}\r\n"
-                    + "Item default privacy: {4}\r\nSubscribed: {5}\r\nAlpha user: {6}\r\n"
-                    + "Account creation date: {7}\r\nAccount updated date: {8}\r\nAccount activated date: {9}",
-                    _cloudApp.AccountDetails.ID,
-                    _cloudApp.AccountDetails.Email,
-                    _cloudApp.AccountDetails.Domain,
-                    _cloudApp.AccountDetails.DomainHomePage,
-                    _cloudApp.AccountDetails.PrivateItems,
-                    _cloudApp.AccountDetails.Subscribed,
-                    _cloudApp.AccountDetails.Alpha,
-                    _cloudApp.AccountDetails.CreatedAt,
-                    _cloudApp.AccountDetails.UpdatedAt,
-                    _cloudApp.AccountDetails.ActivatedAt,
-                    digestCredentials.Ha1);
+                UpdateAccountDetails();
             }
             else
             {
@@ -101,8 +86,15 @@ namespace CloudAppSharpDemo
         {
             try
             {
-                _cloudApp.SetCustomDomain(textBoxCustomDomain.Text, textBoxCustomDomainRedirect.Text);
-                MessageBox.Show("Success!");
+                if (_cloudApp.SetCustomDomain(textBoxCustomDomain.Text, textBoxCustomDomainRedirect.Text))
+                {
+                    MessageBox.Show("Success!");
+                    UpdateAccountDetails();
+                }
+                else
+                {
+                    MessageBox.Show("Failure!");
+                }
             }
             catch (CloudAppProNeededException ex)
             {
@@ -110,6 +102,7 @@ namespace CloudAppSharpDemo
             }
         }
 
+        #region Item listing
         private void buttonUploadsRefresh_Click(object sender, EventArgs e)
         {
             listViewUploads.Items.Clear();
@@ -180,6 +173,7 @@ namespace CloudAppSharpDemo
             CloudAppItem item = (CloudAppItem)listViewUploads.FocusedItem.Tag;
             UpdateDetailsArea(item);
         }
+        #endregion
 
         private void buttonDetailsFromUrl_Click(object sender, EventArgs e)
         {
@@ -208,6 +202,26 @@ namespace CloudAppSharpDemo
                 item.UpdatedAt,
                 String.IsNullOrEmpty(item.DeletedAt) ? "null" : item.DeletedAt
             );
+        }
+
+        private void UpdateAccountDetails()
+        {
+            DigestCredentials digestCredentials = _cloudApp.GetCredentials();
+            textBoxAccountDetails.Text = String.Format("Logged in with HA1 hash {10}\r\n\r\n"
+                + "ID: {0}\r\nEmail: {1}\r\nDomain: {2}\r\nDomain home page: {3}\r\n"
+                + "Item default privacy: {4}\r\nSubscribed: {5}\r\nAlpha user: {6}\r\n"
+                + "Account creation date: {7}\r\nAccount updated date: {8}\r\nAccount activated date: {9}",
+                _cloudApp.AccountDetails.ID,
+                _cloudApp.AccountDetails.Email,
+                _cloudApp.AccountDetails.Domain,
+                _cloudApp.AccountDetails.DomainHomePage,
+                _cloudApp.AccountDetails.PrivateItems,
+                _cloudApp.AccountDetails.Subscribed,
+                _cloudApp.AccountDetails.Alpha,
+                _cloudApp.AccountDetails.CreatedAt,
+                _cloudApp.AccountDetails.UpdatedAt,
+                _cloudApp.AccountDetails.ActivatedAt,
+                digestCredentials.Ha1);
         }
 
         /// <summary>
