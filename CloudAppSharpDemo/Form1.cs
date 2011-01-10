@@ -97,6 +97,19 @@ namespace CloudAppSharpDemo
             }
         }
 
+        private void buttonSetCustomDomain_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _cloudApp.SetCustomDomain(textBoxCustomDomain.Text, textBoxCustomDomainRedirect.Text);
+                MessageBox.Show("Success!");
+            }
+            catch (CloudAppProNeededException)
+            {
+                MessageBox.Show("You need a CloudApp Pro account to set a custom domain.");
+            }
+        }
+
         private void buttonUploadsRefresh_Click(object sender, EventArgs e)
         {
             listViewUploads.Items.Clear();
