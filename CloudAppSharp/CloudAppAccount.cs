@@ -37,6 +37,13 @@ namespace CloudAppSharp
                 JsonHelper.Serialize<CloudAppForgotPassword>(new CloudAppForgotPassword(email)));
         }
 
+        public static void Register(string email, string password)
+        {
+            WebClient wc = new WebClient();
+            wc.UploadString("http://my.cl.ly/register", "POST",
+                JsonHelper.Serialize<CloudAppRegister>(new CloudAppRegister(email, password)));
+        }
+
         public void ChangeDefaultSecurity(bool privateItems)
         {
             ChangeAccountDetail<CloudAppChangeDefaultSecurity>(new CloudAppChangeDefaultSecurity(privateItems));
@@ -127,6 +134,28 @@ namespace CloudAppSharp
 
         [DataMember(Name = "activated_at")]
         public string ActivatedAt { get; set; }
+    }
+
+    [DataContract]
+    internal class CloudAppRegister : CloudAppJsonBase
+    {
+        public CloudAppRegister() { }
+        public CloudAppRegister(string email, string password)
+        {
+            user = new CloudAppRegisterDetails { email = email, password = password };
+        }
+
+        [DataMember]
+        public CloudAppRegisterDetails user { get; set; }
+
+        [DataContract]
+        public class CloudAppRegisterDetails : CloudAppJsonBase
+        {
+            [DataMember]
+            public string email { get; set; }
+            [DataMember]
+            public string password { get; set; }
+        }
     }
 
     [DataContract]
