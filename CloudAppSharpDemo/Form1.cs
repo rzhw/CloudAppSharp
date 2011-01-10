@@ -104,9 +104,9 @@ namespace CloudAppSharpDemo
                 _cloudApp.SetCustomDomain(textBoxCustomDomain.Text, textBoxCustomDomainRedirect.Text);
                 MessageBox.Show("Success!");
             }
-            catch (CloudAppProNeededException)
+            catch (CloudAppProNeededException ex)
             {
-                MessageBox.Show("You need a CloudApp Pro account to set a custom domain.");
+                MessageBox.Show(ex.Message);
             }
         }
 

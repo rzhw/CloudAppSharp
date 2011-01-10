@@ -21,7 +21,7 @@ namespace CloudAppSharp
     /// </summary>
     public class CloudAppInvalidResponseException : WebException
     {
-        public CloudAppInvalidResponseException(string message, Exception innerException, WebExceptionStatus status, WebResponse response)
+        public CloudAppInvalidResponseException(string message, Exception innerException,WebExceptionStatus status, WebResponse response)
             : base(message, innerException, status, response)
         {
         }
@@ -45,6 +45,7 @@ namespace CloudAppSharp
     public class CloudAppProNeededException : Exception
     {
         public CloudAppProNeededException() { }
+        public CloudAppProNeededException(string message, Exception innerException) : base(message, innerException) { }
     }
 
     /// <summary>

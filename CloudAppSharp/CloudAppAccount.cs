@@ -70,7 +70,7 @@ namespace CloudAppSharp
                 HttpWebResponse response = e.Response as HttpWebResponse;
                 if (response != null && (int)response.StatusCode == 422)
                 {
-                    throw new CloudAppProNeededException();
+                    throw new CloudAppProNeededException("You need a CloudApp Pro account to set a custom domain.", e);
                 }
             }
         }
