@@ -42,7 +42,6 @@
             this.buttonUploadsDetails = new System.Windows.Forms.Button();
             this.listViewUploads = new System.Windows.Forms.ListView();
             this.columnHeaderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderIcon = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderViews = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderPublic = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderAdded = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -52,7 +51,6 @@
             this.buttonUploadFile = new System.Windows.Forms.Button();
             this.buttonUploadFileBrowse = new System.Windows.Forms.Button();
             this.textBoxUploadFile = new System.Windows.Forms.TextBox();
-            this.groupDetails = new System.Windows.Forms.GroupBox();
             this.labelDetailsName = new System.Windows.Forms.Label();
             this.pictureBoxDetails = new System.Windows.Forms.PictureBox();
             this.textBoxDetails = new System.Windows.Forms.TextBox();
@@ -63,16 +61,28 @@
             this.groupBoxAddBookmark = new System.Windows.Forms.GroupBox();
             this.buttonAddBookmark = new System.Windows.Forms.Button();
             this.textBoxAddBookmark = new System.Windows.Forms.TextBox();
-            this.labelStatus = new System.Windows.Forms.Label();
-            this.buttonAccountDetails = new System.Windows.Forms.Button();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPageItems = new System.Windows.Forms.TabPage();
+            this.tabPageNew = new System.Windows.Forms.TabPage();
+            this.tabPageAccount = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.textBoxAccountDetails = new System.Windows.Forms.TextBox();
+            this.tabPageItemDetails = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.groupBoxCredentials.SuspendLayout();
             this.groupBoxUploads.SuspendLayout();
             this.groupBoxUploadFile.SuspendLayout();
-            this.groupDetails.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDetails)).BeginInit();
             this.groupBoxDetailsFromUrl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.groupBoxAddBookmark.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPageItems.SuspendLayout();
+            this.tabPageNew.SuspendLayout();
+            this.tabPageAccount.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.tabPageItemDetails.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxCredentials
@@ -156,9 +166,9 @@
             this.groupBoxUploads.Controls.Add(this.listViewUploads);
             this.groupBoxUploads.Controls.Add(this.buttonUploadsRefresh);
             this.groupBoxUploads.Enabled = false;
-            this.groupBoxUploads.Location = new System.Drawing.Point(12, 222);
+            this.groupBoxUploads.Location = new System.Drawing.Point(6, 6);
             this.groupBoxUploads.Name = "groupBoxUploads";
-            this.groupBoxUploads.Size = new System.Drawing.Size(600, 176);
+            this.groupBoxUploads.Size = new System.Drawing.Size(580, 176);
             this.groupBoxUploads.TabIndex = 1;
             this.groupBoxUploads.TabStop = false;
             this.groupBoxUploads.Text = "Uploads";
@@ -217,7 +227,6 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewUploads.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderName,
-            this.columnHeaderIcon,
             this.columnHeaderViews,
             this.columnHeaderPublic,
             this.columnHeaderAdded,
@@ -226,7 +235,7 @@
             this.listViewUploads.GridLines = true;
             this.listViewUploads.Location = new System.Drawing.Point(9, 19);
             this.listViewUploads.Name = "listViewUploads";
-            this.listViewUploads.Size = new System.Drawing.Size(583, 120);
+            this.listViewUploads.Size = new System.Drawing.Size(563, 120);
             this.listViewUploads.TabIndex = 1;
             this.listViewUploads.UseCompatibleStateImageBehavior = false;
             this.listViewUploads.View = System.Windows.Forms.View.Details;
@@ -234,15 +243,8 @@
             // 
             // columnHeaderName
             // 
-            this.columnHeaderName.DisplayIndex = 1;
             this.columnHeaderName.Text = "Name";
             this.columnHeaderName.Width = 200;
-            // 
-            // columnHeaderIcon
-            // 
-            this.columnHeaderIcon.DisplayIndex = 0;
-            this.columnHeaderIcon.Text = "";
-            this.columnHeaderIcon.Width = 20;
             // 
             // columnHeaderViews
             // 
@@ -268,7 +270,7 @@
             // 
             this.buttonUploadsRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonUploadsRefresh.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.buttonUploadsRefresh.Location = new System.Drawing.Point(517, 145);
+            this.buttonUploadsRefresh.Location = new System.Drawing.Point(497, 145);
             this.buttonUploadsRefresh.Name = "buttonUploadsRefresh";
             this.buttonUploadsRefresh.Size = new System.Drawing.Size(75, 23);
             this.buttonUploadsRefresh.TabIndex = 0;
@@ -284,9 +286,9 @@
             this.groupBoxUploadFile.Controls.Add(this.buttonUploadFileBrowse);
             this.groupBoxUploadFile.Controls.Add(this.textBoxUploadFile);
             this.groupBoxUploadFile.Enabled = false;
-            this.groupBoxUploadFile.Location = new System.Drawing.Point(12, 164);
+            this.groupBoxUploadFile.Location = new System.Drawing.Point(6, 67);
             this.groupBoxUploadFile.Name = "groupBoxUploadFile";
-            this.groupBoxUploadFile.Size = new System.Drawing.Size(600, 52);
+            this.groupBoxUploadFile.Size = new System.Drawing.Size(580, 52);
             this.groupBoxUploadFile.TabIndex = 2;
             this.groupBoxUploadFile.TabStop = false;
             this.groupBoxUploadFile.Text = "Upload File";
@@ -296,7 +298,7 @@
             this.buttonUploadFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonUploadFile.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.buttonUploadFile.Location = new System.Drawing.Point(517, 17);
+            this.buttonUploadFile.Location = new System.Drawing.Point(497, 17);
             this.buttonUploadFile.Name = "buttonUploadFile";
             this.buttonUploadFile.Size = new System.Drawing.Size(75, 23);
             this.buttonUploadFile.TabIndex = 2;
@@ -326,24 +328,10 @@
             this.textBoxUploadFile.Size = new System.Drawing.Size(200, 20);
             this.textBoxUploadFile.TabIndex = 0;
             // 
-            // groupDetails
-            // 
-            this.groupDetails.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupDetails.Controls.Add(this.labelDetailsName);
-            this.groupDetails.Controls.Add(this.pictureBoxDetails);
-            this.groupDetails.Controls.Add(this.textBoxDetails);
-            this.groupDetails.Location = new System.Drawing.Point(12, 462);
-            this.groupDetails.Name = "groupDetails";
-            this.groupDetails.Size = new System.Drawing.Size(600, 138);
-            this.groupDetails.TabIndex = 3;
-            this.groupDetails.TabStop = false;
-            this.groupDetails.Text = "Item Details";
-            // 
             // labelDetailsName
             // 
             this.labelDetailsName.AutoSize = true;
-            this.labelDetailsName.Location = new System.Drawing.Point(28, 21);
+            this.labelDetailsName.Location = new System.Drawing.Point(26, 7);
             this.labelDetailsName.Name = "labelDetailsName";
             this.labelDetailsName.Size = new System.Drawing.Size(72, 13);
             this.labelDetailsName.TabIndex = 2;
@@ -351,7 +339,7 @@
             // 
             // pictureBoxDetails
             // 
-            this.pictureBoxDetails.Location = new System.Drawing.Point(9, 19);
+            this.pictureBoxDetails.Location = new System.Drawing.Point(5, 5);
             this.pictureBoxDetails.MaximumSize = new System.Drawing.Size(16, 16);
             this.pictureBoxDetails.MinimumSize = new System.Drawing.Size(16, 16);
             this.pictureBoxDetails.Name = "pictureBoxDetails";
@@ -361,13 +349,13 @@
             // 
             // textBoxDetails
             // 
-            this.textBoxDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDetails.Location = new System.Drawing.Point(7, 41);
+            this.textBoxDetails.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxDetails.Location = new System.Drawing.Point(0, 28);
             this.textBoxDetails.Multiline = true;
             this.textBoxDetails.Name = "textBoxDetails";
-            this.textBoxDetails.Size = new System.Drawing.Size(585, 89);
+            this.textBoxDetails.ReadOnly = true;
+            this.textBoxDetails.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxDetails.Size = new System.Drawing.Size(592, 390);
             this.textBoxDetails.TabIndex = 0;
             // 
             // groupBoxDetailsFromUrl
@@ -376,9 +364,9 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxDetailsFromUrl.Controls.Add(this.buttonDetailsFromUrl);
             this.groupBoxDetailsFromUrl.Controls.Add(this.textBoxDetailsFromUrl);
-            this.groupBoxDetailsFromUrl.Location = new System.Drawing.Point(12, 404);
+            this.groupBoxDetailsFromUrl.Location = new System.Drawing.Point(6, 188);
             this.groupBoxDetailsFromUrl.Name = "groupBoxDetailsFromUrl";
-            this.groupBoxDetailsFromUrl.Size = new System.Drawing.Size(600, 52);
+            this.groupBoxDetailsFromUrl.Size = new System.Drawing.Size(580, 52);
             this.groupBoxDetailsFromUrl.TabIndex = 4;
             this.groupBoxDetailsFromUrl.TabStop = false;
             this.groupBoxDetailsFromUrl.Text = "View Item Details by Short URL";
@@ -388,7 +376,7 @@
             this.buttonDetailsFromUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDetailsFromUrl.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.buttonDetailsFromUrl.Location = new System.Drawing.Point(517, 17);
+            this.buttonDetailsFromUrl.Location = new System.Drawing.Point(497, 17);
             this.buttonDetailsFromUrl.Name = "buttonDetailsFromUrl";
             this.buttonDetailsFromUrl.Size = new System.Drawing.Size(75, 23);
             this.buttonDetailsFromUrl.TabIndex = 1;
@@ -420,16 +408,17 @@
             this.groupBoxAddBookmark.Controls.Add(this.buttonAddBookmark);
             this.groupBoxAddBookmark.Controls.Add(this.textBoxAddBookmark);
             this.groupBoxAddBookmark.Enabled = false;
-            this.groupBoxAddBookmark.Location = new System.Drawing.Point(12, 106);
+            this.groupBoxAddBookmark.Location = new System.Drawing.Point(6, 9);
             this.groupBoxAddBookmark.Name = "groupBoxAddBookmark";
-            this.groupBoxAddBookmark.Size = new System.Drawing.Size(600, 52);
+            this.groupBoxAddBookmark.Size = new System.Drawing.Size(580, 52);
             this.groupBoxAddBookmark.TabIndex = 6;
             this.groupBoxAddBookmark.TabStop = false;
             this.groupBoxAddBookmark.Text = "Add Bookmark";
             // 
             // buttonAddBookmark
             // 
-            this.buttonAddBookmark.Location = new System.Drawing.Point(517, 17);
+            this.buttonAddBookmark.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAddBookmark.Location = new System.Drawing.Point(497, 17);
             this.buttonAddBookmark.Name = "buttonAddBookmark";
             this.buttonAddBookmark.Size = new System.Drawing.Size(75, 23);
             this.buttonAddBookmark.TabIndex = 1;
@@ -445,41 +434,105 @@
             this.textBoxAddBookmark.TabIndex = 0;
             this.textBoxAddBookmark.Text = "http://www.google.com/";
             // 
-            // labelStatus
+            // tabControl1
             // 
-            this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(225, 19);
-            this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(70, 13);
-            this.labelStatus.TabIndex = 7;
-            this.labelStatus.Text = "Not logged in";
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Controls.Add(this.tabPageItems);
+            this.tabControl1.Controls.Add(this.tabPageNew);
+            this.tabControl1.Controls.Add(this.tabPageItemDetails);
+            this.tabControl1.Controls.Add(this.tabPageAccount);
+            this.tabControl1.Location = new System.Drawing.Point(12, 106);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(600, 444);
+            this.tabControl1.TabIndex = 9;
             // 
-            // buttonAccountDetails
+            // tabPageItems
             // 
-            this.buttonAccountDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAccountDetails.Enabled = false;
-            this.buttonAccountDetails.Location = new System.Drawing.Point(529, 15);
-            this.buttonAccountDetails.Name = "buttonAccountDetails";
-            this.buttonAccountDetails.Size = new System.Drawing.Size(75, 23);
-            this.buttonAccountDetails.TabIndex = 8;
-            this.buttonAccountDetails.Text = "Details...";
-            this.buttonAccountDetails.UseVisualStyleBackColor = true;
-            this.buttonAccountDetails.Click += new System.EventHandler(this.buttonAccountDetails_Click);
+            this.tabPageItems.Controls.Add(this.groupBoxUploads);
+            this.tabPageItems.Controls.Add(this.groupBoxDetailsFromUrl);
+            this.tabPageItems.Location = new System.Drawing.Point(4, 22);
+            this.tabPageItems.Name = "tabPageItems";
+            this.tabPageItems.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageItems.Size = new System.Drawing.Size(592, 418);
+            this.tabPageItems.TabIndex = 0;
+            this.tabPageItems.Text = "Items";
+            this.tabPageItems.UseVisualStyleBackColor = true;
+            // 
+            // tabPageNew
+            // 
+            this.tabPageNew.Controls.Add(this.groupBoxAddBookmark);
+            this.tabPageNew.Controls.Add(this.groupBoxUploadFile);
+            this.tabPageNew.Location = new System.Drawing.Point(4, 22);
+            this.tabPageNew.Name = "tabPageNew";
+            this.tabPageNew.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageNew.Size = new System.Drawing.Size(592, 418);
+            this.tabPageNew.TabIndex = 1;
+            this.tabPageNew.Text = "New Item";
+            this.tabPageNew.UseVisualStyleBackColor = true;
+            // 
+            // tabPageAccount
+            // 
+            this.tabPageAccount.Controls.Add(this.groupBox1);
+            this.tabPageAccount.Location = new System.Drawing.Point(4, 22);
+            this.tabPageAccount.Name = "tabPageAccount";
+            this.tabPageAccount.Size = new System.Drawing.Size(592, 418);
+            this.tabPageAccount.TabIndex = 2;
+            this.tabPageAccount.Text = "Account";
+            this.tabPageAccount.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.textBoxAccountDetails);
+            this.groupBox1.Location = new System.Drawing.Point(5, 3);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(583, 150);
+            this.groupBox1.TabIndex = 0;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Details";
+            // 
+            // textBoxAccountDetails
+            // 
+            this.textBoxAccountDetails.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxAccountDetails.Location = new System.Drawing.Point(3, 16);
+            this.textBoxAccountDetails.Multiline = true;
+            this.textBoxAccountDetails.Name = "textBoxAccountDetails";
+            this.textBoxAccountDetails.ReadOnly = true;
+            this.textBoxAccountDetails.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxAccountDetails.Size = new System.Drawing.Size(577, 131);
+            this.textBoxAccountDetails.TabIndex = 0;
+            // 
+            // tabPageItemDetails
+            // 
+            this.tabPageItemDetails.Controls.Add(this.textBoxDetails);
+            this.tabPageItemDetails.Controls.Add(this.panel1);
+            this.tabPageItemDetails.Location = new System.Drawing.Point(4, 22);
+            this.tabPageItemDetails.Name = "tabPageItemDetails";
+            this.tabPageItemDetails.Size = new System.Drawing.Size(592, 418);
+            this.tabPageItemDetails.TabIndex = 3;
+            this.tabPageItemDetails.Text = "Item Details";
+            this.tabPageItemDetails.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.labelDetailsName);
+            this.panel1.Controls.Add(this.pictureBoxDetails);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(592, 28);
+            this.panel1.TabIndex = 4;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(624, 612);
-            this.Controls.Add(this.buttonAccountDetails);
-            this.Controls.Add(this.labelStatus);
-            this.Controls.Add(this.groupBoxAddBookmark);
+            this.ClientSize = new System.Drawing.Size(624, 562);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.pictureBoxLogo);
-            this.Controls.Add(this.groupBoxDetailsFromUrl);
-            this.Controls.Add(this.groupDetails);
-            this.Controls.Add(this.groupBoxUploadFile);
-            this.Controls.Add(this.groupBoxUploads);
             this.Controls.Add(this.groupBoxCredentials);
             this.Name = "Form1";
             this.Text = "CloudAppSharp Demo";
@@ -488,16 +541,23 @@
             this.groupBoxUploads.ResumeLayout(false);
             this.groupBoxUploadFile.ResumeLayout(false);
             this.groupBoxUploadFile.PerformLayout();
-            this.groupDetails.ResumeLayout(false);
-            this.groupDetails.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDetails)).EndInit();
             this.groupBoxDetailsFromUrl.ResumeLayout(false);
             this.groupBoxDetailsFromUrl.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
             this.groupBoxAddBookmark.ResumeLayout(false);
             this.groupBoxAddBookmark.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPageItems.ResumeLayout(false);
+            this.tabPageNew.ResumeLayout(false);
+            this.tabPageAccount.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.tabPageItemDetails.ResumeLayout(false);
+            this.tabPageItemDetails.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -511,7 +571,6 @@
         private System.Windows.Forms.GroupBox groupBoxUploads;
         private System.Windows.Forms.ListView listViewUploads;
         private System.Windows.Forms.Button buttonUploadsRefresh;
-        private System.Windows.Forms.ColumnHeader columnHeaderIcon;
         private System.Windows.Forms.ColumnHeader columnHeaderName;
         private System.Windows.Forms.ColumnHeader columnHeaderAdded;
         private System.Windows.Forms.ColumnHeader columnHeaderUpdated;
@@ -522,7 +581,6 @@
         private System.Windows.Forms.Button buttonUploadFileBrowse;
         private System.Windows.Forms.TextBox textBoxUploadFile;
         private System.Windows.Forms.Button buttonUploadsDetails;
-        private System.Windows.Forms.GroupBox groupDetails;
         private System.Windows.Forms.TextBox textBoxDetails;
         private System.Windows.Forms.Label labelDetailsName;
         private System.Windows.Forms.PictureBox pictureBoxDetails;
@@ -535,10 +593,16 @@
         private System.Windows.Forms.Button buttonAddBookmark;
         private System.Windows.Forms.Button buttonUploadsDelete;
         private System.Windows.Forms.Button buttonUploadsPrivacy;
-        private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.ColumnHeader columnHeaderPublic;
         private System.Windows.Forms.Button buttonUploadsRename;
-        private System.Windows.Forms.Button buttonAccountDetails;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPageItems;
+        private System.Windows.Forms.TabPage tabPageNew;
+        private System.Windows.Forms.TabPage tabPageAccount;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TextBox textBoxAccountDetails;
+        private System.Windows.Forms.TabPage tabPageItemDetails;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

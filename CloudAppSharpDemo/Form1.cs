@@ -19,8 +19,6 @@ namespace CloudAppSharpDemo
             Font = SystemFonts.MessageBoxFont;
             AutoScaleMode = AutoScaleMode.Font;
             InitializeComponent();
-            labelStatus.Location = new Point(pictureBoxLogo.Location.X + pictureBoxLogo.Image.Width + 6,
-                labelStatus.Location.Y);
             labelDetailsName.Location = new Point(28, 21);
         }
 
@@ -37,9 +35,21 @@ namespace CloudAppSharpDemo
                 groupBoxUploads.Enabled = true;
                 buttonLogin.Text = "Logout";
                 DigestCredentials digestCredentials = _cloudApp.GetCredentials();
-                labelStatus.Text = String.Format("Logged in: {0}, hash {1}",
-                    digestCredentials.Username, digestCredentials.Ha1);
-                buttonAccountDetails.Enabled = true;
+                textBoxAccountDetails.Text = String.Format("Logged in with HA1 hash {10}\r\n\r\n"
+                    + "ID: {0}\r\nEmail: {1}\r\nDomain: {2}\r\nDomain home page: {3}\r\n"
+                    + "Item default privacy: {4}\r\nSubscribed: {5}\r\nAlpha user: {6}\r\n"
+                    + "Account creation date: {7}\r\nAccount updated date: {8}\r\nAccount activated date: {9}",
+                    _cloudApp.AccountDetails.ID,
+                    _cloudApp.AccountDetails.Email,
+                    _cloudApp.AccountDetails.Domain,
+                    _cloudApp.AccountDetails.DomainHomePage,
+                    _cloudApp.AccountDetails.PrivateItems,
+                    _cloudApp.AccountDetails.Subscribed,
+                    _cloudApp.AccountDetails.Alpha,
+                    _cloudApp.AccountDetails.CreatedAt,
+                    _cloudApp.AccountDetails.UpdatedAt,
+                    _cloudApp.AccountDetails.ActivatedAt,
+                    digestCredentials.Ha1);
             }
             else
             {
@@ -51,30 +61,8 @@ namespace CloudAppSharpDemo
                 groupBoxUploadFile.Enabled = false;
                 groupBoxUploads.Enabled = false;
                 buttonLogin.Text = "Login";
-                labelStatus.Text = "Not logged in";
-                buttonAccountDetails.Enabled = false;
+                textBoxAccountDetails.Text = "Not logged in";
             }
-        }
-
-        private void buttonAccountDetails_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show(
-                String.Format("ID: {0}\nEmail: {1}\nDomain: {2}\nDomain home page: {3}\n"
-                    + "Item default privacy: {4}\nSubscribed: {5}\nAlpha user: {6}\n"
-                    + "Account creation date: {7}\nAccount updated date: {8}\nAccount activated date: {9}",
-                    _cloudApp.AccountDetails.ID,
-                    _cloudApp.AccountDetails.Email,
-                    _cloudApp.AccountDetails.Domain,
-                    _cloudApp.AccountDetails.DomainHomePage,
-                    _cloudApp.AccountDetails.PrivateItems,
-                    _cloudApp.AccountDetails.Subscribed,
-                    _cloudApp.AccountDetails.Alpha,
-                    _cloudApp.AccountDetails.CreatedAt,
-                    _cloudApp.AccountDetails.UpdatedAt,
-                    _cloudApp.AccountDetails.ActivatedAt),
-                "CloudAppSharp Demo",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
         }
 
         private void buttonAddBookmark_Click(object sender, EventArgs e)
@@ -187,6 +175,8 @@ namespace CloudAppSharpDemo
 
         private void UpdateDetailsArea(CloudAppItem item)
         {
+            tabControl1.SelectedTab = tabPageItemDetails;
+
             pictureBoxDetails.Image = UriToBitmap(item.Icon);
 
             labelDetailsName.Text = String.Format("{0} ({1}, {2} views, {3})",
