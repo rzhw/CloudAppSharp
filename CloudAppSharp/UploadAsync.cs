@@ -181,11 +181,15 @@ namespace CloudAppSharp
                         }
                         else
                         {
-                            worker.ReportProgress(Math.Min(100, (int)(((double)(bytesRead * i) / (double)fileData.Length) * (double)100)));
+                            worker.ReportProgress((int)Math.Floor(Math.Min(100.0,
+                                (((double)(bytesRead * i) / (double)fileData.Length) * 100.0))));
                             requestStream.Write(buffer, 0, bytesRead);
                             i++;
                         }
                     }
+
+                    // We might have finished before hitting 100%!
+                    worker.ReportProgress(100);
                 }
 
                 // Write the footer
