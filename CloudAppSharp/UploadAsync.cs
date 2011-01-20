@@ -196,7 +196,7 @@ namespace CloudAppSharp
                 requestStream.Write(footer, 0, footer.Length);
 
                 // The result
-                e.Result = (HttpWebResponse)webrequest.GetResponse();
+                e.Result = webrequest;
             }
         }
     }

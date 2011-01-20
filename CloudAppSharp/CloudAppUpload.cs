@@ -128,7 +128,7 @@ namespace CloudAppSharp
             };
 
             // When we're done...
-            Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((sender, e) =>
+            Worker.RunWorkerCompleted += (sender, e) =>
             {
                 IsCompleted = true;
                 uploader.Dispose();
@@ -144,21 +144,27 @@ namespace CloudAppSharp
                 }
                 else
                 {
-                    HttpWebResponse uploadResponse = (HttpWebResponse)e.Result;
+                    HttpWebRequest uploadRequest = (HttpWebRequest)e.Result;
+                    HttpWebResponse uploadResponse = null;
 
-                    if (uploadResponse.StatusCode == HttpStatusCode.SeeOther)
+                    try
+                    {
+                        uploadResponse = (HttpWebResponse)uploadRequest.GetResponse();
+                    }
+                    catch (WebException e2)
+                    {
+                        uploadResponse = (HttpWebResponse)e2.Response;
+                    }
+
+                    if (uploadResponse != null && uploadResponse.StatusCode == HttpStatusCode.SeeOther)
                     {
                         if (Completed != null)
                         {
                             BackgroundWorker bw = new BackgroundWorker();
                             bw.DoWork += (sender2, e2) =>
-                            {
                                 e2.Result = _cloudApp.GetObject<CloudAppItem>(new Uri(uploadResponse.Headers["Location"]));
-                            };
                             bw.RunWorkerCompleted += (sender2, e2) =>
-                            {
                                 Completed(this, new CloudAppUploadCompletedEventArgs((CloudAppItem)e2.Result));
-                            };
                             bw.RunWorkerAsync();
                         }
                     }
@@ -169,7 +175,7 @@ namespace CloudAppSharp
                                 new CloudAppInvalidProtocolException(HttpStatusCode.SeeOther, uploadResponse), false));
                     }
                 }
-            });
+            };
 
             if (Ready != null)
                 Ready(this, new EventArgs());
