@@ -67,20 +67,7 @@ namespace CloudAppSharp
             // One stone, two birds: Get our account details AND our cookies!
             HttpWebRequest wr = CreateRequest("http://my.cl.ly/account", "GET");
             wr.Credentials = new DigestCredentials(email, password, isHA1);
-            HttpWebResponse response;
-            try
-            {
-                response = (HttpWebResponse)wr.GetResponse();
-            }
-            catch (WebException e)
-            {
-                if (e.Response == null)
-                    throw e;
-                else if (((HttpWebResponse)e.Response).StatusCode == HttpStatusCode.Unauthorized)
-                    throw new CloudAppInvalidCredentialsException(e);
-                else
-                    throw e;
-            }
+            HttpWebResponse response = GetRequestResponse(wr);
 
             // No problems? Let's store our stuff, then.
             AccountDetails = JsonHelper.Deserialize<CloudAppUser>(response);
@@ -127,12 +114,23 @@ namespace CloudAppSharp
 
         internal HttpWebResponse GetRequestResponse(HttpWebRequest wr)
         {
-            HttpWebResponse response = (HttpWebResponse)wr.GetResponse();
+            try
+            {
+                return (HttpWebResponse)wr.GetResponse();
+            }
+            catch (WebException e)
+            {
+                HttpWebResponse response = (HttpWebResponse)e.Response;
 
-            if (response.StatusCode != HttpStatusCode.OK)
-                throw new CloudAppInvalidProtocolException(HttpStatusCode.OK, response);
-            else
-                return response;
+                if (response == null)
+                    throw e;
+                else if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    throw new CloudAppInvalidCredentialsException(e);
+                else if (response.StatusCode != HttpStatusCode.OK)
+                    throw new CloudAppInvalidProtocolException(HttpStatusCode.OK, response);
+                else
+                    throw e;
+            }
         }
     }
 }

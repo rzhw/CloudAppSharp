@@ -108,7 +108,7 @@ namespace CloudAppSharp
             HttpWebRequest wr = CreateRequest("http://my.cl.ly/items", "POST",
                 JsonHelper.Serialize<CloudAppNewBookmark>(new CloudAppNewBookmark(uri.ToString(), uri.ToString())));
 
-            using (HttpWebResponse response = (HttpWebResponse)wr.GetResponse())
+            using (HttpWebResponse response = GetRequestResponse(wr))
             {
                 return JsonHelper.Deserialize<CloudAppItem>(response);
             }

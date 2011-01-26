@@ -29,7 +29,7 @@ namespace CloudAppSharp
     {
         public T GetObject<T>(Uri uri)
         {
-            using (HttpWebResponse response = (HttpWebResponse)CreateRequest(uri, "GET").GetResponse())
+            using (HttpWebResponse response = GetRequestResponse(CreateRequest(uri, "GET")))
             {
                 return JsonHelper.Deserialize<T>(response);
             }
@@ -42,9 +42,7 @@ namespace CloudAppSharp
 
         private string GetJson(Uri uri)
         {
-            HttpWebRequest wr = CreateRequest(uri, "GET");
-
-            using (HttpWebResponse response = (HttpWebResponse)wr.GetResponse())
+            using (HttpWebResponse response = GetRequestResponse(CreateRequest(uri, "GET")))
             {
                 Stream dataStream = response.GetResponseStream();
                 return new StreamReader(dataStream).ReadToEnd();
