@@ -21,7 +21,7 @@ namespace CloudAppSharp
     /// </summary>
     public class CloudAppInvalidResponseException : WebException
     {
-        public CloudAppInvalidResponseException(string message, Exception innerException,WebExceptionStatus status, WebResponse response)
+        public CloudAppInvalidResponseException(string message, Exception innerException, WebExceptionStatus status, WebResponse response)
             : base(message, innerException, status, response)
         {
         }
@@ -33,7 +33,8 @@ namespace CloudAppSharp
     public class CloudAppInvalidProtocolException : WebException
     {
         public CloudAppInvalidProtocolException(HttpStatusCode expectedCode, HttpWebResponse response)
-            : base("Expected status " + expectedCode + "; got " + response.StatusCode + " instead",
+            : base("Expected status " + expectedCode + "; got " + response.StatusCode + " instead"
+                    + "\nResponse URI was " + response.ResponseUri.ToString(),
                 null, WebExceptionStatus.ProtocolError, response)
         {
         }
