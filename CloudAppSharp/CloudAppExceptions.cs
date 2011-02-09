@@ -6,6 +6,13 @@ using System.Text;
 namespace CloudAppSharp
 {
     /// <summary>
+    /// The exception that is thrown when a WebException is not covered by any other CloudAppSharp exception.
+    /// </summary>
+    public class CloudAppWebException : WebException
+    {
+    }
+
+    /// <summary>
     /// The exception that is thrown when invalid credentials are provided to the CloudApp service.
     /// </summary>
     public class CloudAppInvalidCredentialsException : Exception
