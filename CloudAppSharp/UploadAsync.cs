@@ -9,6 +9,7 @@
  * Modified by Richard Wang to remove MIME detection (14/09/2010)
  * Modified by Richard Wang to add proxy support (23/10/2010)
  * Modified by Richard Wang to add support for cancellation (29/12/2010)
+ * Modified by Richard Wang to make the webrequest variable public (9/02/2010)
  */
 
 using System;
@@ -28,7 +29,7 @@ namespace CloudAppSharp
         byte[] footer;
         string _fileName;
         public int chunkSize = 128;
-        HttpWebRequest webrequest;
+        public HttpWebRequest webrequest;
         FileStream fileData;
 
         #region Disposal

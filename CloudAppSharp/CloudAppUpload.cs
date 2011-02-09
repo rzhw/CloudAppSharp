@@ -50,6 +50,9 @@ namespace CloudAppSharp
             }
             else
             {
+                // TODO: Implement setting the uploader WebRequest's ServicePoint.Expect100Continue to false
+                // if we get a 417 Expectation Failed, and then try upload again(?) - see the comment regarding
+                // this below in CloudAppAsyncUploader.PrepareUpload()
                 throw new CloudAppInvalidProtocolException(HttpStatusCode.SeeOther, uploadResponse);
             }
         }
@@ -167,6 +170,24 @@ namespace CloudAppSharp
                                 Completed(this, new CloudAppUploadCompletedEventArgs((CloudAppItem)e2.Result));
                             bw.RunWorkerAsync();
                         }
+                    }
+                    else if (uploadResponse != null && uploadResponse.StatusCode == HttpStatusCode.ExpectationFailed
+                        && uploader.webrequest.ServicePoint.Expect100Continue)
+                    {
+                        // It appears f.cl.ly (i.e. S3) may return 417 Expectation Failed for some users...
+                        // I don't know where the exact trigger of the problem is, but considering that sending
+                        // Expect: 100-Continue requires the server to respond with 100 Continue, if the server
+                        // or whatever is in-between doesn't support it, I would expect it to respond with this
+                        // error before any of the file data is uploaded. I hope. If that's not the case, double
+                        // uploading sure sounds like a fun thing to deal with.
+                        //
+                        // References:
+                        // http://stackoverflow.com/q/566437/566847#566847
+                        // http://haacked.com/archive/2004/05/15/http-web-request-expect-100-continue.aspx#1908
+                        uploader.webrequest.ServicePoint.Expect100Continue = false;
+
+                        // Time to reupload!
+                        Worker.RunWorkerAsync();
                     }
                     else
                     {
