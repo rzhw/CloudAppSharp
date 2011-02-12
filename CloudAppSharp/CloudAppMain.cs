@@ -123,13 +123,13 @@ namespace CloudAppSharp
                 HttpWebResponse response = (HttpWebResponse)e.Response;
 
                 if (response == null)
-                    throw (CloudAppWebException)e;
+                    throw /*(CloudAppWebException)*/e; // TODO: This cast fails; find a workaround/fix
                 else if (response.StatusCode == HttpStatusCode.Unauthorized)
                     throw new CloudAppInvalidCredentialsException(e);
                 else if (response.StatusCode != HttpStatusCode.OK)
                     throw new CloudAppInvalidProtocolException(HttpStatusCode.OK, response);
                 else
-                    throw (CloudAppWebException)e;
+                    throw /*(CloudAppWebException)*/e;
             }
         }
     }
