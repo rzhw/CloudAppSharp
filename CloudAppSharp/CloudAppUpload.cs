@@ -58,6 +58,9 @@ namespace CloudAppSharp
         }
     }
 
+    /// <summary>
+    /// Facilitates the uploading of a file to CloudApp.
+    /// </summary>
     public class CloudAppAsyncUploader
     {
         private string _fileName;
@@ -71,6 +74,11 @@ namespace CloudAppSharp
         public event CloudAppUploadCompletedEventHandler Completed;
         public event EventHandler Ready;
 
+        /// <summary>
+        /// Initialises a new instance of the CloudAppSharp.CloudAppAsyncUploader class with a logged in instance of CloudAppSharp.CloudApp and the path to the file to upload.
+        /// </summary>
+        /// <param name="cloudApp">A logged in instance of CloudAppSharp.CloudApp</param>
+        /// <param name="fileName">The path to the file to upload.</param>
         public CloudAppAsyncUploader(CloudApp cloudApp, string fileName)
         {
             if (!File.Exists(fileName))

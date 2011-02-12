@@ -30,6 +30,10 @@ namespace CloudAppSharp
     {
         public CloudAppUser AccountDetails { get; private set; }
 
+        /// <summary>
+        /// Sends a password reset message to a given user's email.
+        /// </summary>
+        /// <param name="email">The email of the user to send the password reset message to.</param>
         public static void ForgotPassword(string email)
         {
             WebClient wc = new WebClient();
@@ -37,6 +41,11 @@ namespace CloudAppSharp
                 JsonHelper.Serialize<CloudAppForgotPassword>(new CloudAppForgotPassword(email)));
         }
 
+        /// <summary>
+        /// Registers a new account with the given email and password on CloudApp.
+        /// </summary>
+        /// <param name="email">The email of the user to register.</param>
+        /// <param name="password">The string to use as the user's password.</param>
         public static void Register(string email, string password)
         {
             WebClient wc = new WebClient();
@@ -44,21 +53,41 @@ namespace CloudAppSharp
                 JsonHelper.Serialize<CloudAppRegister>(new CloudAppRegister(email, password)));
         }
 
+        /// <summary>
+        /// Changes the default security toggle of items created by a user. Requires authentication.
+        /// </summary>
+        /// <param name="privateItems">Whether to set the default privacy setting to private.</param>
         public void ChangeDefaultSecurity(bool privateItems)
         {
             ChangeAccountDetail<CloudAppChangeDefaultSecurity>(new CloudAppChangeDefaultSecurity(privateItems));
         }
 
+        /// <summary>
+        /// Changes the email of a user. Requires authentication.
+        /// </summary>
+        /// <param name="newEmail">The new email of the user.</param>
+        /// <param name="currentPassword">The current password of the user, for verification.</param>
         public void ChangeEmail(string newEmail, string currentPassword)
         {
             ChangeAccountDetail<CloudAppChangeEmail>(new CloudAppChangeEmail(newEmail, currentPassword));
         }
 
+        /// <summary>
+        /// Changes the password of a user. Requires authentication.
+        /// </summary>
+        /// <param name="newPassword">The new password of the user.</param>
+        /// <param name="currentPassword">The current password of the user, for verification.</param>
         public void ChangePassword(string newPassword, string currentPassword)
         {
             ChangeAccountDetail<CloudAppChangePassword>(new CloudAppChangePassword(newPassword, currentPassword));
         }
 
+        /// <summary>
+        /// Sets the custom domain of a user. Requires authentication with a CloudApp Pro account.
+        /// </summary>
+        /// <param name="domain">The domain to set (e.g. example.com, cloud.example.com) </param>
+        /// <param name="domainHomePage">Where to redirect from the domain root (e.g. http://www.google.com/) </param>
+        /// <returns></returns>
         public bool SetCustomDomain(string domain, string domainHomePage)
         {
             try

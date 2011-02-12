@@ -75,6 +75,10 @@ namespace CloudAppSharp
             _cookies = wr.CookieContainer;
         }
 
+        /// <summary>
+        /// Returns the HTTP digest credentials used to sign into CloudApp.
+        /// </summary>
+        /// <returns>A DigestCredentials instance containing the HTTP digest credentials used to sign into CloudApp.</returns>
         public DigestCredentials GetCredentials()
         {
             return new DigestCredentials(_credentials.Username, _credentials.Ha1, true);

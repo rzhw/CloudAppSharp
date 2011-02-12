@@ -27,6 +27,12 @@ namespace CloudAppSharp
 {
     public partial class CloudApp
     {
+        /// <summary>
+        /// Returns a deserialised JSON response from the given URI as the logged in user.
+        /// </summary>
+        /// <typeparam name="T">The type to deserialise the JSON to.</typeparam>
+        /// <param name="uri">The URI to retrieve the JSON from.</param>
+        /// <returns>The deserialised JSON.</returns>
         public T GetObject<T>(Uri uri)
         {
             using (HttpWebResponse response = GetRequestResponse(CreateRequest(uri, "GET")))
@@ -35,6 +41,12 @@ namespace CloudAppSharp
             }
         }
 
+        /// <summary>
+        /// Returns a deserialised JSON response from the given URI as the logged in user as a List of a given type.
+        /// </summary>
+        /// <typeparam name="T">The type of the list.</typeparam>
+        /// <param name="uri">The URI to retrieve the JSON from.</param>
+        /// <returns>The list.</returns>
         public List<T> GetObjects<T>(Uri uri)
         {
             return GetObject<List<T>>(uri);

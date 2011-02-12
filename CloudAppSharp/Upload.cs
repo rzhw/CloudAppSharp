@@ -34,16 +34,13 @@ namespace CloudAppSharp
         /// to post with file data</param>
         /// <param name="fileData">An open, positioned stream containing the file data</param>
         /// <param name="fileName">Optional, a name to assign to the file data.</param>
-        /// <param name="fileContentType">Optional. 
-        /// If omitted, registry is queried using <paramref name="fileName"/>. 
-        /// If content type is not available from registry, 
-        /// application/octet-stream will be submitted.</param>
         /// <param name="fileFieldName">Optional, 
         /// a form field name to assign to the uploaded file data. 
         /// If omitted the value 'file' will be submitted.</param>
         /// <param name="cookies">Optional, can pass null. Used to send and retrieve cookies. 
         /// Pass the same instance to subsequent calls to maintain state if required.</param>
         /// <param name="headers">Optional, headers to be added to request.</param>
+        /// <param name="allowAutoRedirect">Whether to allow automatic redirection.</param>
         /// <returns></returns>
         /// Reference: 
         /// http://tools.ietf.org/html/rfc1867
@@ -165,16 +162,13 @@ namespace CloudAppSharp
         /// <param name="postData">A NameValueCollection containing 
         /// form fields to post with file data</param>
         /// <param name="fileName">The physical path of the file to upload</param>
-        /// <param name="fileContentType">Optional. 
-        /// If omitted, registry is queried using <paramref name="fileName"/>. 
-        /// If content type is not available from registry, 
-        /// application/octet-stream will be submitted.</param>
         /// <param name="fileFieldName">Optional, a form field name 
         /// to assign to the uploaded file data. 
         /// If omitted the value 'file' will be submitted.</param>
         /// <param name="cookies">Optional, can pass null. Used to send and retrieve cookies. 
         /// Pass the same instance to subsequent calls to maintain state if required.</param>
         /// <param name="headers">Optional, headers to be added to request.</param>
+        /// <param name="allowAutoRedirect">Whether to allow automatic redirection.</param>
         /// <returns></returns>
         public static WebResponse PostFile
         (Uri requestUri, NameValueCollection postData, string fileName,

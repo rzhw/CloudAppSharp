@@ -28,9 +28,9 @@ namespace CloudAppSharp
     public partial class CloudApp
     {
         /// <summary>
-        /// Retrieves information about an item hosted on CloudApp.
+        /// Retrieves information about an item on CloudApp.
         /// </summary>
-        /// <param name="uri">The uri to the item in question (e.g. http://cl.ly/gee) </param>
+        /// <param name="uri">The uri to the item in question (e.g. http://cl.ly/gee). </param>
         /// <returns></returns>
         public static CloudAppItem GetItemFromUri(Uri uri)
         {
@@ -38,9 +38,9 @@ namespace CloudAppSharp
         }
 
         /// <summary>
-        /// Retrieves information about an item hosted on CloudApp.
+        /// Retrieves information about an item on CloudApp.
         /// </summary>
-        /// <param name="uri">The uri to the item in question (e.g. http://cl.ly/gee) </param>
+        /// <param name="uri">The uri to the item in question (e.g. http://cl.ly/gee). </param>
         /// <returns></returns>
         public static CloudAppItem GetItemFromUri(string uri)
         {
@@ -48,15 +48,21 @@ namespace CloudAppSharp
         }
 
         /// <summary>
-        /// Deletes an item hosted on CloudApp uploaded by the logged in user. Requires authentication.
+        /// Deletes an item on CloudApp added by the logged in user. Requires authentication.
         /// </summary>
-        /// <param name="item">The item to delete</param>
+        /// <param name="item">The item to delete.</param>
         public void DeleteItem(CloudAppItem item)
         {
             HttpWebRequest wr = CreateRequest(item.Href, "DELETE");
             GetRequestResponse(wr).Close();
         }
 
+        /// <summary>
+        /// Sets the privacy toggle of an item on CloudApp added by the logged in user. Requires authentication.
+        /// </summary>
+        /// <param name="item">The item to set the privacy of.</param>
+        /// <param name="setPrivate">Whether to set the item to private.</param>
+        /// <returns></returns>
         public CloudAppItem SetPrivacy(CloudAppItem item, bool setPrivate)
         {
             HttpWebRequest wr = CreateRequest(item.Href, "PUT",
@@ -68,6 +74,12 @@ namespace CloudAppSharp
             }
         }
 
+        /// <summary>
+        /// Renames an item on CloudApp added by the logged in user. Requires authentication.
+        /// </summary>
+        /// <param name="item">The item to rename.</param>
+        /// <param name="newName">The new name for the item.</param>
+        /// <returns></returns>
         public CloudAppItem RenameItem(CloudAppItem item, string newName)
         {
             HttpWebRequest wr = CreateRequest(item.Href, "PUT",
@@ -80,7 +92,7 @@ namespace CloudAppSharp
         }
 
         /// <summary>
-        /// Retrieves a list of items uploaded by the user to CloudApp. Requires authentication.
+        /// Retrieves a list of items added by the logged in user to CloudApp. Requires authentication.
         /// </summary>
         /// <returns></returns>
         public List<CloudAppItem> GetItems()
@@ -89,7 +101,7 @@ namespace CloudAppSharp
         }
 
         /// <summary>
-        /// Retrieves a list of items uploaded by the user to CloudApp. Requires authentication.
+        /// Retrieves a list of items added by the logged in user to CloudApp. Requires authentication.
         /// </summary>
         /// <param name="limit">How many items to retrieve at most.</param>
         /// <returns></returns>

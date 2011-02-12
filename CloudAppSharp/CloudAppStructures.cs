@@ -24,6 +24,9 @@ using System.Runtime.Serialization;
 
 namespace CloudAppSharp
 {
+    /// <summary>
+    /// Specifies a CloudApp item type.
+    /// </summary>
     public enum CloudAppItemType
     {
         Bookmark,
