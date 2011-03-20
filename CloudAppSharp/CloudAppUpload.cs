@@ -159,6 +159,7 @@ namespace CloudAppSharp
 
                     if (uploadResponse != null && uploadResponse.StatusCode == HttpStatusCode.SeeOther)
                     {
+                        // Success!
                         if (Completed != null)
                         {
                             BackgroundWorker bw = new BackgroundWorker();
@@ -168,6 +169,12 @@ namespace CloudAppSharp
                                 Completed(this, new CloudAppUploadCompletedEventArgs((CloudAppItem)e2.Result));
                             bw.RunWorkerAsync();
                         }
+                    }
+                    else if (e.Error != null)
+                    {
+                        // Got an exception during upload
+                        if (Completed != null)
+                            Completed(this, new CloudAppUploadCompletedEventArgs(e.Error, false));
                     }
                     else if (uploadResponse != null && uploadResponse.StatusCode == HttpStatusCode.ExpectationFailed
                         && uploader.webrequest.ServicePoint.Expect100Continue)
@@ -189,6 +196,7 @@ namespace CloudAppSharp
                     }
                     else
                     {
+                        // Unexpected response
                         if (Completed != null)
                             Completed(this, new CloudAppUploadCompletedEventArgs(
                                 new CloudAppInvalidProtocolException(HttpStatusCode.SeeOther, uploadResponse), false));
