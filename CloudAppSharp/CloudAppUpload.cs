@@ -155,17 +155,7 @@ namespace CloudAppSharp
                 }
                 else
                 {
-                    HttpWebRequest uploadRequest = (HttpWebRequest)e.Result;
-                    HttpWebResponse uploadResponse = null;
-
-                    try
-                    {
-                        uploadResponse = (HttpWebResponse)uploadRequest.GetResponse();
-                    }
-                    catch (WebException e2)
-                    {
-                        uploadResponse = (HttpWebResponse)e2.Response;
-                    }
+                    HttpWebResponse uploadResponse = (HttpWebResponse)e.Result;
 
                     if (uploadResponse != null && uploadResponse.StatusCode == HttpStatusCode.SeeOther)
                     {

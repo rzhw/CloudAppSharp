@@ -196,8 +196,15 @@ namespace CloudAppSharp
                 // Write the footer
                 requestStream.Write(footer, 0, footer.Length);
 
-                // The result
-                e.Result = webrequest;
+                // The resultant response
+                try
+                {
+                    e.Result = (HttpWebResponse)webrequest.GetResponse();
+                }
+                catch (WebException e2)
+                {
+                    e.Result = (HttpWebResponse)e2.Response;
+                }
             }
         }
     }
