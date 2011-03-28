@@ -83,7 +83,10 @@ namespace CloudAppSharp.Auth
         {
             lock (Challengecache)
             {
-                Challengecache.Add(ha1, challenge);
+                if (!Challengecache.ContainsKey(ha1))
+                    Challengecache.Add(ha1, challenge);
+                else
+                    Challengecache[ha1] = challenge;
             }
         }
 
