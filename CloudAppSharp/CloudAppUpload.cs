@@ -141,40 +141,32 @@ namespace CloudAppSharp
             // When we're done...
             Worker.RunWorkerCompleted += (sender, e) =>
             {
-                IsCompleted = true;
                 uploader.Dispose();
 
-                if (e.Cancelled)
+                if (e.Error != null && Completed != null)
                 {
-                    if (Completed != null)
-                    {
-                        CloudAppUploadCompletedEventArgs e2 = new CloudAppUploadCompletedEventArgs();
-                        e2.Cancelled = true;
-                        Completed(this, e2);
-                    }
+                    Completed(this, new CloudAppUploadCompletedEventArgs(e.Error, false));
+                }
+                else if (e.Cancelled && Completed != null)
+                {
+                    CloudAppUploadCompletedEventArgs e2 = new CloudAppUploadCompletedEventArgs();
+                    e2.Cancelled = true;
+                    Completed(this, e2);
                 }
                 else
                 {
                     HttpWebResponse uploadResponse = (HttpWebResponse)e.Result;
 
-                    if (uploadResponse != null && uploadResponse.StatusCode == HttpStatusCode.SeeOther)
+                    if (uploadResponse != null && uploadResponse.StatusCode == HttpStatusCode.SeeOther
+                        && Completed != null)
                     {
                         // Success!
-                        if (Completed != null)
-                        {
-                            BackgroundWorker bw = new BackgroundWorker();
-                            bw.DoWork += (sender2, e2) =>
-                                e2.Result = _cloudApp.GetObject<CloudAppItem>(new Uri(uploadResponse.Headers["Location"]));
-                            bw.RunWorkerCompleted += (sender2, e2) =>
-                                Completed(this, new CloudAppUploadCompletedEventArgs((CloudAppItem)e2.Result));
-                            bw.RunWorkerAsync();
-                        }
-                    }
-                    else if (e.Error != null)
-                    {
-                        // Got an exception during upload
-                        if (Completed != null)
-                            Completed(this, new CloudAppUploadCompletedEventArgs(e.Error, false));
+                        BackgroundWorker bw = new BackgroundWorker();
+                        bw.DoWork += (sender2, e2) =>
+                            e2.Result = _cloudApp.GetObject<CloudAppItem>(new Uri(uploadResponse.Headers["Location"]));
+                        bw.RunWorkerCompleted += (sender2, e2) =>
+                            Completed(this, new CloudAppUploadCompletedEventArgs((CloudAppItem)e2.Result));
+                        bw.RunWorkerAsync();
                     }
                     else if (uploadResponse != null && uploadResponse.StatusCode == HttpStatusCode.ExpectationFailed
                         && uploader.webrequest.ServicePoint.Expect100Continue)
@@ -194,12 +186,11 @@ namespace CloudAppSharp
                         // Time to reupload!
                         Worker.RunWorkerAsync();
                     }
-                    else
+                    else if (Completed != null)
                     {
                         // Unexpected response
-                        if (Completed != null)
-                            Completed(this, new CloudAppUploadCompletedEventArgs(
-                                new CloudAppInvalidProtocolException(HttpStatusCode.SeeOther, uploadResponse), false));
+                        Completed(this, new CloudAppUploadCompletedEventArgs(
+                            new CloudAppInvalidProtocolException(HttpStatusCode.SeeOther, uploadResponse), false));
                     }
                 }
             };
