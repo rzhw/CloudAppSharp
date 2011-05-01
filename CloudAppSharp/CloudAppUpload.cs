@@ -186,6 +186,10 @@ namespace CloudAppSharp
                         // Time to reupload!
                         Worker.RunWorkerAsync();
                     }
+                    else if (uploadResponse == null)
+                    {
+                        throw e.Error;
+                    }
                     else if (Completed != null)
                     {
                         // Unexpected response
