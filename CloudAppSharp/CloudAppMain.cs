@@ -35,6 +35,7 @@ namespace CloudAppSharp
         private DigestCredentials _credentials = null;
         private CookieContainer _cookies = new CookieContainer();
 
+        public bool IsConnected { get; set; }
         public int Timeout { get; set; }
         public IWebProxy Proxy { get; set; }
 
@@ -44,27 +45,33 @@ namespace CloudAppSharp
         }
 
         /// <summary>
-        /// Initialises a new instance of the CloudAppSharp.CloudApp class with the specified email and password.
+        /// Initialises a new instance of the CloudAppSharp.CloudApp class.
         /// </summary>
-        /// <param name="email">The email associated with the credentials.</param>
-        /// <param name="password">The password associated with the credentials.</param>
-        public CloudApp(string email, string password)
-            : this(email, password, false)
+        public CloudApp()
         {
+            IsConnected = false;
+            Timeout = 5000;
+            Proxy = WebRequest.GetSystemWebProxy();
         }
 
         /// <summary>
-        /// Initialises a new instance of the CloudAppSharp.CloudApp class with the specified email and password or HA1 hash.
+        /// Attempts to connect to the CloudApp service with the specified email and password.
+        /// </summary>
+        /// <param name="email">The email associated with the credentials.</param>
+        /// <param name="password">The password associated with the credentials.</param>
+        public void Connect(string email, string password)
+        {
+            Connect(email, password, false);
+        }
+
+        /// <summary>
+        /// Attempts to connect to the CloudApp service with the specified email and password or HA1 hash.
         /// </summary>
         /// <param name="email">The email associated with the credentials.</param>
         /// <param name="password">The password or precalculated HA1 associated with the credentials.</param>
         /// <param name="isHA1">This specifies if the password field is a password, or a hash. True if a hash, false if a password.</param>
-        public CloudApp(string email, string password, bool isHA1)
+        public void Connect(string email, string password, bool isHA1)
         {
-            // Whoo, defaults
-            Timeout = 5000;
-            Proxy = WebRequest.GetSystemWebProxy();
-
             // CloudApp seems to store emails in its database lowercased.
             email = email.ToLower();
 
@@ -74,6 +81,7 @@ namespace CloudAppSharp
             HttpWebResponse response = GetRequestResponse(wr);
 
             // No problems? Let's store our stuff, then.
+            IsConnected = true;
             AccountDetails = JsonHelper.Deserialize<CloudAppUser>(response);
             _credentials = (DigestCredentials)wr.Credentials;
             _cookies = wr.CookieContainer;
@@ -88,7 +96,7 @@ namespace CloudAppSharp
             return new DigestCredentials(_credentials.Username, _credentials.Ha1, true);
         }
 
-        internal HttpWebRequest CreateRequest(Uri requestUri, string method)
+        internal HttpWebRequest CreateRequest(string requestUri, string method)
         {
             HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(requestUri);
             wr.Timeout = Timeout;
@@ -99,12 +107,7 @@ namespace CloudAppSharp
             return wr;
         }
 
-        internal HttpWebRequest CreateRequest(string requestUriString, string method)
-        {
-            return this.CreateRequest(new Uri(requestUriString), method);
-        }
-
-        internal HttpWebRequest CreateRequest(Uri requestUri, string method, string toSend)
+        internal HttpWebRequest CreateRequest(string requestUri, string method, string toSend)
         {
             HttpWebRequest wr = this.CreateRequest(requestUri, method);
             wr.ContentType = "application/json";
@@ -114,11 +117,6 @@ namespace CloudAppSharp
             dataStream.Write(byteArray, 0, byteArray.Length);
             dataStream.Close();
             return wr;
-        }
-
-        internal HttpWebRequest CreateRequest(string requestUriString, string method, string toSend)
-        {
-            return this.CreateRequest(new Uri(requestUriString), method, toSend);
         }
 
         internal HttpWebResponse GetRequestResponse(HttpWebRequest wr)
