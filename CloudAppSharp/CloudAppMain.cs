@@ -35,12 +35,12 @@ namespace CloudAppSharp
         private DigestCredentials _credentials = null;
         private CookieContainer _cookies = new CookieContainer();
 
-        public static IWebProxy Proxy { get; set; }
+        public int Timeout { get; set; }
+        public IWebProxy Proxy { get; set; }
 
         static CloudApp()
         {
             AuthenticationManager.Register(new CloudAppDigestAuth());
-            Proxy = WebRequest.GetSystemWebProxy();
         }
 
         /// <summary>
@@ -61,10 +61,14 @@ namespace CloudAppSharp
         /// <param name="isHA1">This specifies if the password field is a password, or a hash. True if a hash, false if a password.</param>
         public CloudApp(string email, string password, bool isHA1)
         {
+            // Whoo, defaults
+            Timeout = 5000;
+            Proxy = WebRequest.GetSystemWebProxy();
+
             // CloudApp seems to store emails in its database lowercased.
             email = email.ToLower();
 
-            // One stone, two birds: Get our account details AND our cookies!
+            // Two birds with one stone; get our account details AND our cookies!
             HttpWebRequest wr = CreateRequest("http://my.cl.ly/account", "GET");
             wr.Credentials = new DigestCredentials(email, password, isHA1);
             HttpWebResponse response = GetRequestResponse(wr);
@@ -87,6 +91,7 @@ namespace CloudAppSharp
         internal HttpWebRequest CreateRequest(Uri requestUri, string method)
         {
             HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(requestUri);
+            wr.Timeout = Timeout;
             wr.CookieContainer = this._cookies;
             wr.Proxy = Proxy;
             wr.Method = method;
