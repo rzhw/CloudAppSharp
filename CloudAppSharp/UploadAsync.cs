@@ -10,6 +10,7 @@
  * Modified by Richard Wang to add proxy support (23/10/2010)
  * Modified by Richard Wang to add support for cancellation (29/12/2010)
  * Modified by Richard Wang to make the webrequest variable public (9/02/2010)
+ * Modified by Richard Wang to require param "proxy" (4/05/2011)
  */
 
 using System;
@@ -62,7 +63,7 @@ namespace CloudAppSharp
         #endregion
 
         public SalientUploadAsync(Uri requestUri, NameValueCollection postData, string fileName, string fileFieldName, CookieContainer cookies,
-             NameValueCollection headers, bool allowAutoRedirect)
+             NameValueCollection headers, bool allowAutoRedirect, IWebProxy proxy)
         {
             // Open the file
             fileData = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -74,7 +75,7 @@ namespace CloudAppSharp
             webrequest = (HttpWebRequest)WebRequest.Create(requestUri);
 
             // Proxy
-            webrequest.Proxy = CloudApp.Proxy;
+            webrequest.Proxy = proxy;
 
             // Timeouts
             webrequest.Timeout = System.Threading.Timeout.Infinite;

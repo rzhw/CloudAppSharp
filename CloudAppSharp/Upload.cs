@@ -4,9 +4,10 @@
  * The original class was been licensed by its author under
  * The Code Project Open License (CPOL)
  *
- * Modified by a2h to allow disabling of automatic redirection (31/07/2010)
- * Modified by a2h to remove MIME detection (14/09/2010)
- * Modified by a2h to add proxy support (23/10/2010)
+ * Modified by Richard Wang to allow disabling of automatic redirection (31/07/2010)
+ * Modified by Richard Wang to remove MIME detection (14/09/2010)
+ * Modified by Richard Wang to add proxy support (23/10/2010)
+ * Modified by Richard Wang to require param "proxy" (4/05/2011)
  */
 
 using System;
@@ -50,12 +51,12 @@ namespace CloudAppSharp
         public static WebResponse PostFile
         (Uri requestUri, NameValueCollection postData, Stream fileData, string fileName,
                 string fileFieldName, CookieContainer cookies,
-                NameValueCollection headers, bool allowAutoRedirect)
+                NameValueCollection headers, bool allowAutoRedirect, IWebProxy proxy)
         {
             HttpWebRequest webrequest = (HttpWebRequest)WebRequest.Create(requestUri);
 
             // Proxy
-            webrequest.Proxy = CloudApp.Proxy;
+            webrequest.Proxy = proxy;
 
             if (!allowAutoRedirect)
             {
@@ -173,14 +174,14 @@ namespace CloudAppSharp
         public static WebResponse PostFile
         (Uri requestUri, NameValueCollection postData, string fileName,
              string fileFieldName, CookieContainer cookies,
-             NameValueCollection headers, bool allowAutoRedirect)
+             NameValueCollection headers, bool allowAutoRedirect, IWebProxy proxy)
         {
             using (FileStream fileData = File.Open
             (fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 return PostFile(requestUri, postData, fileData,
             fileName, fileFieldName, cookies,
-                                headers, allowAutoRedirect);
+                                headers, allowAutoRedirect, proxy);
             }
         }
     }

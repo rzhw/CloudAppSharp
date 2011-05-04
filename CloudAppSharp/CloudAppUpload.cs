@@ -42,7 +42,8 @@ namespace CloudAppSharp
             else if (newItem.MaximumUploadSize > 0 && new FileInfo(fileName).Length > newItem.MaximumUploadSize)
                 throw new CloudAppUploadSizeLimitExceededException();
 
-            HttpWebResponse uploadResponse = (HttpWebResponse)SalientUpload.PostFile(new Uri(newItem.Url), newItem.Params, fileName, "file", null, null, false);
+            HttpWebResponse uploadResponse = (HttpWebResponse)SalientUpload.PostFile(
+                new Uri(newItem.Url), newItem.Params, fileName, "file",null, null, false, this.Proxy);
 
             if (uploadResponse.StatusCode == HttpStatusCode.SeeOther)
             {
@@ -118,7 +119,7 @@ namespace CloudAppSharp
             SalientUploadAsync uploader;
             try
             {
-                uploader = new SalientUploadAsync(new Uri(newItem.Url), newItem.Params, _fileName, "file", null, null, false);
+                uploader = new SalientUploadAsync(new Uri(newItem.Url), newItem.Params, _fileName, "file", null, null, false, _cloudApp.Proxy);
             }
             catch (Exception e)
             {
