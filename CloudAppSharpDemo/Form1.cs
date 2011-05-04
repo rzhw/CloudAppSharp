@@ -26,7 +26,8 @@ namespace CloudAppSharpDemo
         {
             if (!_cloudAppLogged)
             {
-                _cloudApp = new CloudApp(textBoxEmail.Text, textBoxPassword.Text);
+                _cloudApp = new CloudApp();
+                _cloudApp.Connect(textBoxEmail.Text, textBoxPassword.Text);
                 _cloudAppLogged = true;
                 textBoxEmail.Enabled = false;
                 textBoxPassword.Enabled = false;
