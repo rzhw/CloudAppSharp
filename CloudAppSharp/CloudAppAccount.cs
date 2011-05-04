@@ -28,6 +28,9 @@ namespace CloudAppSharp
 {
     public partial class CloudApp
     {
+        /// <summary>
+        /// Details of the user currently authenticated.
+        /// </summary>
         public CloudAppUser AccountDetails { get; private set; }
 
         /// <summary>
