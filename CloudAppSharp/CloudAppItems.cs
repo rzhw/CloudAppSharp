@@ -32,7 +32,7 @@ namespace CloudAppSharp
         /// </summary>
         /// <param name="uri">The uri to the item in question (e.g. http://cl.ly/gee). </param>
         /// <returns></returns>
-        public static CloudAppItem GetItemFromUri(Uri uri)
+        public static CloudAppItem GetItemFromUri(string uri)
         {
             return JsonHelper.Deserialize<CloudAppItem>(GetJsonStatic(uri));
         }
@@ -42,9 +42,9 @@ namespace CloudAppSharp
         /// </summary>
         /// <param name="uri">The uri to the item in question (e.g. http://cl.ly/gee). </param>
         /// <returns></returns>
-        public static CloudAppItem GetItemFromUri(string uri)
+        public static CloudAppItem GetItemFromUri(Uri uri)
         {
-            return GetItemFromUri(new Uri(uri));
+            return GetItemFromUri(uri.ToString());
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace CloudAppSharp
         /// <returns></returns>
         public List<CloudAppItem> GetItems()
         {
-            return this.GetObjects<CloudAppItem>(new Uri("http://my.cl.ly/items"));
+            return this.GetObjects<CloudAppItem>("http://my.cl.ly/items");
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace CloudAppSharp
         /// <returns></returns>
         public List<CloudAppItem> GetItems(int limit)
         {
-            return this.GetObjects<CloudAppItem>(new Uri("http://my.cl.ly/items?per_page=" + limit.ToString()));
+            return this.GetObjects<CloudAppItem>("http://my.cl.ly/items?per_page=" + limit.ToString());
         }
 
         /// <summary>

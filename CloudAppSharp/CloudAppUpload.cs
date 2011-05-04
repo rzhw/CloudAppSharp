@@ -35,7 +35,7 @@ namespace CloudAppSharp
         /// <returns></returns>
         public CloudAppItem Upload(string fileName)
         {
-            CloudAppNewItem newItem = this.GetObject<CloudAppNewItem>(new Uri("http://my.cl.ly/items/new"));
+            CloudAppNewItem newItem = this.GetObject<CloudAppNewItem>("http://my.cl.ly/items/new");
 
             if (newItem.Params == null)
                 throw new CloudAppUploadCountLimitExceededException();
@@ -47,7 +47,7 @@ namespace CloudAppSharp
 
             if (uploadResponse.StatusCode == HttpStatusCode.SeeOther)
             {
-                return GetObject<CloudAppItem>(new Uri(uploadResponse.Headers["Location"]));
+                return GetObject<CloudAppItem>(uploadResponse.Headers["Location"]);
             }
             else
             {
@@ -93,7 +93,7 @@ namespace CloudAppSharp
             _cloudApp = cloudApp;
 
             BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += (sender, e) => e.Result = _cloudApp.GetObject<CloudAppNewItem>(new Uri("http://my.cl.ly/items/new"));
+            bw.DoWork += (sender, e) => e.Result = _cloudApp.GetObject<CloudAppNewItem>("http://my.cl.ly/items/new");
             bw.RunWorkerCompleted += (sender, e) => PrepareUpload((CloudAppNewItem)e.Result);
             bw.RunWorkerAsync();
         }
@@ -164,7 +164,7 @@ namespace CloudAppSharp
                         // Success!
                         BackgroundWorker bw = new BackgroundWorker();
                         bw.DoWork += (sender2, e2) =>
-                            e2.Result = _cloudApp.GetObject<CloudAppItem>(new Uri(uploadResponse.Headers["Location"]));
+                            e2.Result = _cloudApp.GetObject<CloudAppItem>(uploadResponse.Headers["Location"]);
                         bw.RunWorkerCompleted += (sender2, e2) =>
                             Completed(this, new CloudAppUploadCompletedEventArgs((CloudAppItem)e2.Result));
                         bw.RunWorkerAsync();

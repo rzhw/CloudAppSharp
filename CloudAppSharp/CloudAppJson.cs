@@ -33,7 +33,7 @@ namespace CloudAppSharp
         /// <typeparam name="T">The type to deserialise the JSON to.</typeparam>
         /// <param name="uri">The URI to retrieve the JSON from.</param>
         /// <returns>The deserialised JSON.</returns>
-        public T GetObject<T>(Uri uri)
+        public T GetObject<T>(string uri)
         {
             using (HttpWebResponse response = GetRequestResponse(CreateRequest(uri, "GET")))
             {
@@ -47,12 +47,12 @@ namespace CloudAppSharp
         /// <typeparam name="T">The type of the list.</typeparam>
         /// <param name="uri">The URI to retrieve the JSON from.</param>
         /// <returns>The list.</returns>
-        public List<T> GetObjects<T>(Uri uri)
+        public List<T> GetObjects<T>(string uri)
         {
             return GetObject<List<T>>(uri);
         }
 
-        private string GetJson(Uri uri)
+        private string GetJson(string uri)
         {
             using (HttpWebResponse response = GetRequestResponse(CreateRequest(uri, "GET")))
             {
@@ -61,7 +61,7 @@ namespace CloudAppSharp
             }
         }
 
-        private static string GetJsonStatic(Uri uri)
+        private static string GetJsonStatic(string uri)
         {
             WebClient wc = new WebClient();
             wc.Headers.Add("Accept", "application/json");
