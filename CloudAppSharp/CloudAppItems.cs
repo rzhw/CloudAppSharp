@@ -115,15 +115,9 @@ namespace CloudAppSharp
         /// </summary>
         /// <param name="uri">The URI to create a bookmark from.</param>
         /// <returns></returns>
-        public CloudAppItem AddBookmark(Uri uri)
+        public CloudAppItem AddBookmark(string uri)
         {
-            HttpWebRequest wr = CreateRequest("http://my.cl.ly/items", "POST",
-                JsonHelper.Serialize<CloudAppNewBookmark>(new CloudAppNewBookmark(uri.ToString(), uri.ToString())));
-
-            using (HttpWebResponse response = GetRequestResponse(wr))
-            {
-                return JsonHelper.Deserialize<CloudAppItem>(response);
-            }
+            return AddBookmark(new Uri(uri));
         }
 
         /// <summary>
@@ -131,9 +125,35 @@ namespace CloudAppSharp
         /// </summary>
         /// <param name="uri">The URI to create a bookmark from.</param>
         /// <returns></returns>
-        public CloudAppItem AddBookmark(string uri)
+        public CloudAppItem AddBookmark(Uri uri)
         {
-            return this.AddBookmark(new Uri(uri));
+            return AddBookmark(uri, uri.ToString());
+        }
+
+        /// <summary>
+        /// Creates a bookmark from a given URI. Requires authentication.
+        /// </summary>
+        /// <param name="uri">The URI to create a bookmark from.</param>
+        /// <param name="name">The name for the bookmark.</param>
+        /// <returns></returns>
+        public CloudAppItem AddBookmark(string uri, string name)
+        {
+            return AddBookmark(new Uri(uri), name);
+        }
+
+        /// <summary>
+        /// Creates a bookmark from a given URI. Requires authentication.
+        /// </summary>
+        /// <param name="uri">The URI to create a bookmark from.</param>
+        /// <param name="name">The name for the bookmark.</param>
+        /// <returns></returns>
+        public CloudAppItem AddBookmark(Uri uri, string name)
+        {
+            HttpWebRequest wr = CreateRequest("http://my.cl.ly/items", "POST",
+                JsonHelper.Serialize<CloudAppNewBookmark>(new CloudAppNewBookmark(name, uri.ToString())));
+
+            using (HttpWebResponse response = GetRequestResponse(wr))
+                return JsonHelper.Deserialize<CloudAppItem>(response);
         }
 
     }
