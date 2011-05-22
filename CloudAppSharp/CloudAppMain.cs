@@ -51,7 +51,6 @@ namespace CloudAppSharp
         {
             IsConnected = false;
             Timeout = 5000;
-            Proxy = WebRequest.GetSystemWebProxy();
         }
 
         /// <summary>
