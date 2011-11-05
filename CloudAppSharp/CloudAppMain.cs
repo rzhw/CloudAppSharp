@@ -33,11 +33,11 @@ namespace CloudAppSharp
     public partial class CloudApp
     {
         private DigestCredentials _credentials = null;
-        private CookieContainer _cookies = new CookieContainer();
 
         public bool IsConnected { get; set; }
         public int Timeout { get; set; }
         public IWebProxy Proxy { get; set; }
+        public CookieContainer CookieContainer { get; internal set; }
 
         static CloudApp()
         {
@@ -51,6 +51,7 @@ namespace CloudAppSharp
         {
             IsConnected = false;
             Timeout = 5000;
+            CookieContainer = new CookieContainer();
         }
 
         /// <summary>
@@ -83,7 +84,7 @@ namespace CloudAppSharp
             IsConnected = true;
             AccountDetails = JsonHelper.Deserialize<CloudAppUser>(response);
             _credentials = (DigestCredentials)wr.Credentials;
-            _cookies = wr.CookieContainer;
+            CookieContainer = wr.CookieContainer;
         }
 
         /// <summary>
@@ -99,7 +100,7 @@ namespace CloudAppSharp
         {
             HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(requestUri);
             wr.Timeout = Timeout;
-            wr.CookieContainer = this._cookies;
+            wr.CookieContainer = this.CookieContainer;
             wr.Proxy = Proxy;
             wr.Method = method;
             wr.Accept = "application/json";
