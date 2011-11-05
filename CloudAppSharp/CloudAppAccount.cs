@@ -170,6 +170,29 @@ namespace CloudAppSharp
 
         [DataMember(Name = "activated_at")]
         public string ActivatedAt { get; set; }
+
+        [DataMember(Name = "socket")]
+        public CloudAppPusherDetails Socket { get; set; }
+    }
+
+    [DataContract]
+    public class CloudAppPusherDetails : CloudAppJsonBase
+    {
+        [DataMember(Name = "auth_url")]
+        public string AuthUrl { get; set; }
+        [DataMember(Name = "api_key")]
+        public string ApiKey { get; set; }
+        [DataMember(Name = "app_id")]
+        public string AppId { get; set; }
+        [DataMember(Name = "channels")]
+        public PusherChannels Channels { get; set; }
+
+        [DataContract]
+        public class PusherChannels : CloudAppJsonBase
+        {
+            [DataMember]
+            public string items { get; set; }
+        }
     }
 
     [DataContract]
