@@ -6,7 +6,7 @@ using System.Runtime.Serialization.Json;
 
 namespace CloudAppSharp
 {
-    internal class JsonHelper
+    public class JsonHelper
     {
         /// <summary>
         /// Serializes a specified object to JavaScript Object Notation (JSON) data and writes the resulting JSON to a string.
