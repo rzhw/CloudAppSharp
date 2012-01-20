@@ -55,8 +55,7 @@ namespace CloudAppSharp
         /// <param name="item">The item to delete.</param>
         public void DeleteItem(CloudAppItem item)
         {
-            HttpWebRequest wr = CreateRequest(item.Href, "DELETE");
-            GetRequestResponse(wr).Close();
+            _reqHelper.GetResponse(item.Href, "DELETE").Close();
         }
 
         /// <summary>
@@ -67,13 +66,10 @@ namespace CloudAppSharp
         /// <returns></returns>
         public CloudAppItem SetPrivacy(CloudAppItem item, bool setPrivate)
         {
-            HttpWebRequest wr = CreateRequest(item.Href, "PUT",
-                JsonHelper.Serialize<CloudAppItemSecurity>(new CloudAppItemSecurity(setPrivate)));
+            string toSend = JsonHelper.Serialize<CloudAppItemSecurity>(new CloudAppItemSecurity(setPrivate));
 
-            using (HttpWebResponse response = GetRequestResponse(wr))
-            {
+            using (var response = _reqHelper.GetResponse(item.Href, "PUT", toSend))
                 return JsonHelper.Deserialize<CloudAppItem>(response);
-            }
         }
 
         /// <summary>
@@ -84,13 +80,10 @@ namespace CloudAppSharp
         /// <returns></returns>
         public CloudAppItem RenameItem(CloudAppItem item, string newName)
         {
-            HttpWebRequest wr = CreateRequest(item.Href, "PUT",
-                JsonHelper.Serialize<CloudAppItemRename>(new CloudAppItemRename(newName)));
+            string toSend = JsonHelper.Serialize<CloudAppItemRename>(new CloudAppItemRename(newName));
 
-            using (HttpWebResponse response = GetRequestResponse(wr))
-            {
+            using (var response = _reqHelper.GetResponse(item.Href, "PUT", toSend))
                 return JsonHelper.Deserialize<CloudAppItem>(response);
-            }
         }
 
         /// <summary>
@@ -151,10 +144,10 @@ namespace CloudAppSharp
         /// <returns></returns>
         public CloudAppItem AddBookmark(Uri uri, string name)
         {
-            HttpWebRequest wr = CreateRequest("http://my.cl.ly/items", "POST",
+            HttpWebRequest wr = _reqHelper.Create("http://my.cl.ly/items", "POST",
                 JsonHelper.Serialize<CloudAppNewBookmark>(new CloudAppNewBookmark(name, uri.ToString())));
 
-            using (HttpWebResponse response = GetRequestResponse(wr))
+            using (HttpWebResponse response = _reqHelper.GetResponse(wr))
                 return JsonHelper.Deserialize<CloudAppItem>(response);
         }
     }

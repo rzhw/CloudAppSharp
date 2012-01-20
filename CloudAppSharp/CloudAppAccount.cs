@@ -113,10 +113,10 @@ namespace CloudAppSharp
 
         private void ChangeAccountDetail<T>(T detailsObject)
         {
-            HttpWebRequest wr = CreateRequest("http://my.cl.ly/account", "PUT",
+            HttpWebRequest wr = _reqHelper.Create("http://my.cl.ly/account", "PUT",
                 JsonHelper.Serialize<T>(detailsObject));
 
-            using (HttpWebResponse response = GetRequestResponse(wr))
+            using (HttpWebResponse response = _reqHelper.GetResponse(wr))
             {
                 AccountDetails = JsonHelper.Deserialize<CloudAppUser>(response);
             }

@@ -54,6 +54,7 @@
     <Compile Include="CloudAppStructures.cs" />
     <Compile Include="CloudAppMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestHelper.cs" />
     <Compile Include="Upload.cs" />
     <Compile Include="UploadAsync.cs" />
   </ItemGroup>

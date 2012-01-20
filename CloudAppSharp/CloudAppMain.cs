@@ -33,6 +33,7 @@ namespace CloudAppSharp
     public partial class CloudApp
     {
         private DigestCredentials _credentials = null;
+        private RequestHelper _reqHelper = null;
 
         public bool IsConnected { get; set; }
         public int Timeout { get; set; }
@@ -52,6 +53,7 @@ namespace CloudAppSharp
             IsConnected = false;
             Timeout = 5000;
             CookieContainer = new CookieContainer();
+            _reqHelper = new RequestHelper(this);
         }
 
         /// <summary>
@@ -76,9 +78,9 @@ namespace CloudAppSharp
             email = email.ToLower();
 
             // Two birds with one stone; get our account details AND our cookies!
-            HttpWebRequest wr = CreateRequest("http://my.cl.ly/account", "GET");
+            HttpWebRequest wr = _reqHelper.Create("http://my.cl.ly/account", "GET");
             wr.Credentials = new DigestCredentials(email, password, isHA1);
-            HttpWebResponse response = GetRequestResponse(wr);
+            HttpWebResponse response = _reqHelper.GetResponse(wr);
 
             // No problems? Let's store our stuff, then.
             IsConnected = true;
@@ -94,50 +96,6 @@ namespace CloudAppSharp
         public DigestCredentials GetCredentials()
         {
             return new DigestCredentials(_credentials.Username, _credentials.Ha1, true);
-        }
-
-        internal HttpWebRequest CreateRequest(string requestUri, string method)
-        {
-            HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(requestUri);
-            wr.Timeout = Timeout;
-            wr.CookieContainer = this.CookieContainer;
-            wr.Proxy = Proxy;
-            wr.Method = method;
-            wr.Accept = "application/json";
-            return wr;
-        }
-
-        internal HttpWebRequest CreateRequest(string requestUri, string method, string toSend)
-        {
-            HttpWebRequest wr = this.CreateRequest(requestUri, method);
-            wr.ContentType = "application/json";
-            byte[] byteArray = Encoding.UTF8.GetBytes(toSend);
-            wr.ContentLength = byteArray.Length;
-            Stream dataStream = wr.GetRequestStream();
-            dataStream.Write(byteArray, 0, byteArray.Length);
-            dataStream.Close();
-            return wr;
-        }
-
-        internal HttpWebResponse GetRequestResponse(HttpWebRequest wr)
-        {
-            try
-            {
-                return (HttpWebResponse)wr.GetResponse();
-            }
-            catch (WebException e)
-            {
-                HttpWebResponse response = (HttpWebResponse)e.Response;
-
-                if (response == null)
-                    throw /*(CloudAppWebException)*/e; // TODO: This cast fails; find a workaround/fix
-                else if (response.StatusCode == HttpStatusCode.Unauthorized)
-                    throw new CloudAppInvalidCredentialsException(e);
-                else if (response.StatusCode != HttpStatusCode.OK)
-                    throw new CloudAppInvalidProtocolException(HttpStatusCode.OK, response);
-                else
-                    throw /*(CloudAppWebException)*/e;
-            }
         }
     }
 }
