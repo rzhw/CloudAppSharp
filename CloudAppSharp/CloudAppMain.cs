@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -39,6 +40,15 @@ namespace CloudAppSharp
         public int Timeout { get; set; }
         public IWebProxy Proxy { get; set; }
         public CookieContainer CookieContainer { get; internal set; }
+
+        /// <summary>
+        /// Occurs immediately before an asynchronous connection attempt to the CloudApp service.
+        /// </summary>
+        public event EventHandler Connecting;
+        /// <summary>
+        /// Occurs when an asynchronous connection to the CloudApp service completes.
+        /// </summary>
+        public event RunWorkerCompletedEventHandler ConnectionCompleted;
 
         static CloudApp()
         {
@@ -65,7 +75,6 @@ namespace CloudAppSharp
         {
             Connect(email, password, false);
         }
-
         /// <summary>
         /// Attempts to connect to the CloudApp service with the specified email and password or HA1 hash.
         /// </summary>
@@ -73,6 +82,45 @@ namespace CloudAppSharp
         /// <param name="password">The password or precalculated HA1 associated with the credentials.</param>
         /// <param name="isHA1">This specifies if the password field is a password, or a hash. True if a hash, false if a password.</param>
         public void Connect(string email, string password, bool isHA1)
+        {
+            ConnectCode(email, password, isHA1);
+        }
+        /// <summary>
+        /// Attempts to connect to the CloudApp service asynchronously with the specified email and password.
+        /// </summary>
+        /// <param name="email">The email associated with the credentials.</param>
+        /// <param name="password">The password associated with the credentials.</param>
+        public void ConnectAsync(string email, string password)
+        {
+            ConnectAsync(email, password, false);
+        }
+        /// <summary>
+        /// Attempts to connect to the CloudApp service asynchronously with the specified email and password or HA1 hash.
+        /// </summary>
+        /// <param name="email">The email associated with the credentials.</param>
+        /// <param name="password">The password or precalculated HA1 associated with the credentials.</param>
+        /// <param name="isHA1">This specifies if the password field is a password, or a hash. True if a hash, false if a password.</param>
+        public void ConnectAsync(string email, string password, bool isHA1)
+        {
+            if (Connecting != null)
+                Connecting(this, new EventArgs());
+            BackgroundWorker bw = new BackgroundWorker();
+            bw.DoWork += (sender, e) => ConnectCode(email, password, isHA1);
+            if (ConnectionCompleted != null)
+                bw.RunWorkerCompleted += ConnectionCompleted;
+            bw.RunWorkerAsync();
+        }
+
+        /// <summary>
+        /// Returns the HTTP digest credentials used to sign into CloudApp.
+        /// </summary>
+        /// <returns>A DigestCredentials instance containing the HTTP digest credentials used to sign into CloudApp.</returns>
+        public DigestCredentials GetCredentials()
+        {
+            return new DigestCredentials(_credentials.Username, _credentials.Ha1, true);
+        }
+
+        private void ConnectCode(string email, string password, bool isHA1)
         {
             // CloudApp seems to store emails in its database lowercased.
             email = email.ToLower();
@@ -87,15 +135,6 @@ namespace CloudAppSharp
             AccountDetails = JsonHelper.Deserialize<CloudAppUser>(response);
             _credentials = (DigestCredentials)wr.Credentials;
             CookieContainer = wr.CookieContainer;
-        }
-
-        /// <summary>
-        /// Returns the HTTP digest credentials used to sign into CloudApp.
-        /// </summary>
-        /// <returns>A DigestCredentials instance containing the HTTP digest credentials used to sign into CloudApp.</returns>
-        public DigestCredentials GetCredentials()
-        {
-            return new DigestCredentials(_credentials.Username, _credentials.Ha1, true);
         }
     }
 }
