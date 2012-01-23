@@ -36,6 +36,7 @@ namespace CloudAppSharp
         private DigestCredentials _credentials = null;
         private RequestHelper _reqHelper = null;
 
+        public int MaxConnectionRetries { get; set; }
         public bool IsConnected { get; set; }
         public int Timeout { get; set; }
         public IWebProxy Proxy { get; set; }
@@ -60,6 +61,7 @@ namespace CloudAppSharp
         /// </summary>
         public CloudApp()
         {
+            MaxConnectionRetries = 3;
             IsConnected = false;
             Timeout = 5000;
             CookieContainer = new CookieContainer();
@@ -128,13 +130,36 @@ namespace CloudAppSharp
             // Two birds with one stone; get our account details AND our cookies!
             HttpWebRequest wr = _reqHelper.Create("http://my.cl.ly/account", "GET");
             wr.Credentials = new DigestCredentials(email, password, isHA1);
-            HttpWebResponse response = _reqHelper.GetResponse(wr);
+
+            // Retry for a few times
+            HttpWebResponse response = ConnectCodeGetResponse(wr, MaxConnectionRetries);
 
             // No problems? Let's store our stuff, then.
             IsConnected = true;
             AccountDetails = JsonHelper.Deserialize<CloudAppUser>(response);
             _credentials = (DigestCredentials)wr.Credentials;
             CookieContainer = wr.CookieContainer;
+        }
+        private HttpWebResponse ConnectCodeGetResponse(HttpWebRequest wr, int retriesLeft)
+        {
+            try
+            {
+                return _reqHelper.GetResponse(wr);
+            }
+            catch (Exception ex)
+            {
+                // Also retry with ArgumentException since there can be cases of "Stream was not readable"
+                if (retriesLeft > 0 && (ex is WebException || ex is ArgumentException)
+                    && !(ex is CloudAppInvalidCredentialsException))
+                {
+                    int nthTry = MaxConnectionRetries - retriesLeft + 1;
+                    System.Threading.Thread.Sleep(nthTry * 1000);
+                    wr.Timeout += nthTry * 3000;
+                    return ConnectCodeGetResponse(wr, retriesLeft - 1);
+                }
+                else
+                    throw;
+            }
         }
     }
 }
