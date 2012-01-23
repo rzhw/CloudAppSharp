@@ -165,8 +165,12 @@ namespace CloudAppSharp
                         BackgroundWorker bw = new BackgroundWorker();
                         bw.DoWork += (sender2, e2) =>
                             e2.Result = _cloudApp.GetObject<CloudAppItem>(uploadResponse.Headers["Location"]);
-                        bw.RunWorkerCompleted += (sender2, e2) =>
-                            Completed(this, new CloudAppUploadCompletedEventArgs((CloudAppItem)e2.Result));
+                        bw.RunWorkerCompleted +=
+                            (sender2, e2) =>
+                            {
+                                IsCompleted = true;
+                                Completed(this, new CloudAppUploadCompletedEventArgs((CloudAppItem)e2.Result));
+                            };
                         bw.RunWorkerAsync();
                     }
                     else if (uploadResponse != null && uploadResponse.StatusCode == HttpStatusCode.ExpectationFailed
